@@ -1,0 +1,17 @@
+<?php
+
+# Copyright (c) 2010 John Reese
+# Licensed under the MIT license
+
+$s_plugin_Slack_ = '';
+$s_plugin_Slack_title = 'Slack Integration';
+$s_plugin_Slack_description = 'Adds Slack integration to Mantis.';
+$s_plugin_Slack_config = 'Configuration';
+$s_plugin_Slack_error_no_curl = 'This plugin requires the cURL PHP extension (http://php.net/curl)';
+$s_plugin_Slack_channel = 'Slack Channel';
+$s_plugin_Slack_token = 'Slack API Token';
+$s_plugin_Slack_instance = 'Slack Instance';
+$s_plugin_Slack_bot_name = 'Slack Bot Name';
+$s_plugin_Slack_bot_icon = 'Slack Bot Icon';
+$s_plugin_Slack_default_channel = 'Default Slack Channel';
+$s_plugin_Slack_channels = 'Slack Channels';
