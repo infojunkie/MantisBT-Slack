@@ -90,7 +90,7 @@ class SlackPlugin extends MantisPlugin {
 
     function notify($msg, $channel) {
         $ch = curl_init();
-        // @see https://meedan.slack.com/services/new/incoming-webhook
+        // @see https://my.slack.com/services/new/incoming-webhook
         $url = sprintf('https://%s.slack.com/services/hooks/incoming-webhook?token=%s', 
             plugin_config_get('instance'), plugin_config_get('token')
         );
