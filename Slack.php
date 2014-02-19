@@ -101,6 +101,7 @@ class SlackPlugin extends MantisPlugin {
             'channel' => $channel,
             'username' => plugin_config_get('bot_name'),
             'text' => $msg,
+            'icon_url' => plugin_config_get('bot_icon')
         ));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $result = curl_exec($ch);
