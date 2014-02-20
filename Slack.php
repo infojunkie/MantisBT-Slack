@@ -97,11 +97,18 @@ class SlackPlugin extends MantisPlugin {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = 'payload=' . json_encode(array(
+        $payload = array(
             'channel' => $channel,
             'username' => plugin_config_get('bot_name'),
-            'text' => $msg,
-        ));
+            'text' => $msg
+        );
+        $bot_icon = plugin_config_get('bot_icon');
+        if (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
+            $payload['icon_emoji'] = $bot_icon;
+        } elseif ($bot_icon) {
+            $payload['icon_url'] = $bot_icon;
+        }
+        $data = 'payload=' . json_encode($payload);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $result = curl_exec($ch);
         curl_close($ch);
