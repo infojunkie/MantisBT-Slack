@@ -45,7 +45,7 @@ class SlackPlugin extends MantisPlugin {
 
     function new_update_bug($event, $bug, $bug_id) {
         $url = string_get_bug_view_url_with_fqdn($bug_id);
-        $summary = bug_format_summary($bug_id, SUMMARY_FIELD);
+        $summary = $this->clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
         $project = project_get_name($bug->project_id);
         $reporter = '@' . user_get_name($bug->reporter_id);
         $handler = empty($bug->handler_id) ? 'no one' : ('@' . user_get_name($bug->handler_id));
@@ -69,7 +69,7 @@ class SlackPlugin extends MantisPlugin {
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
-        $summary = bug_format_summary($bug_id, SUMMARY_FIELD);
+        $summary = $this->clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
         $reporter_id = bugnote_get_field($bugnote_id, 'reporter_id');
         $reporter = '@' . user_get_name($reporter_id);
         $note = bugnote_get_text($bugnote_id);
@@ -81,6 +81,10 @@ class SlackPlugin extends MantisPlugin {
                 break;
         }
         $this->notify($msg, $this->get_channel($project));
+    }
+
+    function clean_summary($summary) {
+        return strip_tags(preg_replace('/\[<a (.*)\/a>\]/', '', $summary));
     }
 
     function get_channel($project) {
