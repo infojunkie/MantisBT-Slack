@@ -29,6 +29,7 @@ class SlackPlugin extends MantisPlugin {
             'EVENT_REPORT_BUG' => 'new_update_bug',
             'EVENT_UPDATE_BUG' => 'new_update_bug',
             'EVENT_BUGNOTE_ADD' => 'new_update_bugnote',
+            'EVENT_BUG_ACTION' => 'bug_action',
         );
     }
 
@@ -81,6 +82,11 @@ class SlackPlugin extends MantisPlugin {
                 break;
         }
         $this->notify($msg, $this->get_channel($project));
+    }
+
+    function bug_action($event, $action, $bug_id) {
+        $bug = bug_get($bug_id);
+        $this->new_update_bug('EVENT_UPDATE_BUG', $bug, $bug_id);
     }
 
     function clean_summary($summary) {

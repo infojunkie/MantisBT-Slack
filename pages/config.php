@@ -75,7 +75,7 @@ print_manage_menu( );
           Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
         </p>
         <p>
-          For example: <pre>array('Project 1' => '#project1', 'Project 2' => '#project2')</pre>
+          The current value of this option is:<pre><?php print_r(plugin_config_get( 'channels' ))?></pre>
         </p>
       </td>
     </tr>
