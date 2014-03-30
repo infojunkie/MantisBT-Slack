@@ -70,12 +70,34 @@ print_manage_menu( );
         <?php echo plugin_lang_get( 'channels' )?>
       </td>
       <td  colspan="2">
-        <p>Complex option types must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.</p>
         <p>
-          Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
+          Specifies the mapping between Mantis project names and Slack #channels.
         </p>
         <p>
+          Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
+          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           The current value of this option is:<pre><?php print_r(plugin_config_get( 'channels' ))?></pre>
+        </p>
+      </td>
+    </tr>
+
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category">
+        <?php echo plugin_lang_get( 'columns' )?>
+      </td>
+      <td  colspan="2">
+        <p>
+          Specifies the bug fields that should be attached to the Slack notifications.
+        </p>
+        <p>
+          Option name is <strong>plugin_Slack_columns</strong> and is an array of bug column names. 
+          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
+          <?php
+            $t_columns = columns_get_all( $t_project_id );
+            $t_all = implode( ', ', $t_columns );
+          ?>
+          Available column names are:<div><textarea name="all_columns" readonly="readonly" cols="80" rows="5"><?php echo $t_all ?></textarea></div>
+          The current value of this option is:<pre><?php print_r(plugin_config_get( 'columns' ))?></pre>
         </p>
       </td>
     </tr>
