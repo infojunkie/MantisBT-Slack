@@ -29,6 +29,7 @@ class SlackPlugin extends MantisPlugin {
             'EVENT_REPORT_BUG' => 'new_update_bug',
             'EVENT_UPDATE_BUG' => 'new_update_bug',
             'EVENT_BUGNOTE_ADD' => 'new_update_bugnote',
+            'EVENT_BUGNOTE_EDIT' => 'new_update_bugnote',
             'EVENT_BUG_ACTION' => 'bug_action',
         );
     }
@@ -56,17 +57,17 @@ class SlackPlugin extends MantisPlugin {
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
         $project = project_get_name($bug->project_id);
         $reporter = '@' . user_get_name($bug->reporter_id);
-        $handler = empty($bug->handler_id) ? 'no one' : ('@' . user_get_name($bug->handler_id));
+        $handler = empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id));
         $modifier = '@' . user_get_name(auth_get_current_user_id());
         $status = get_enum_element( 'status', $bug->status );
         switch ($event) {
             case 'EVENT_REPORT_BUG':
-                $msg = sprintf('[%s] %s created <%s|%s>.',
+                $msg = sprintf(plugin_lang_get('bug_created'),
                     $project, $reporter, $url, $summary
                 );
                 break;
             case 'EVENT_UPDATE_BUG':
-                $msg = sprintf('[%s] %s modified <%s|%s>.',
+                $msg = sprintf(plugin_lang_get('bug_updated'),
                     $project, $modifier, $url, $summary
                 );
                 break;
@@ -84,10 +85,15 @@ class SlackPlugin extends MantisPlugin {
         $note = bugnote_get_text($bugnote_id);
         switch ($event) {
             case 'EVENT_BUGNOTE_ADD':
-                $msg = sprintf("[%s] %s commented on <%s|%s> saying:\n%s",
+                $msg = sprintf(plugin_lang_get('bugnote_created'),
                     $project, $reporter, $url, $summary, $note
                 );
                 break;
+            case 'EVENT_BUGNOTE_EDIT':
+                $msg = sprintf(plugin_lang_get('bugnote_updated'),
+                    $project, $reporter, $url, $summary, $note
+                );
+                break;                
         }
         $this->notify($msg, $this->get_channel($project));
     }
@@ -165,7 +171,7 @@ class SlackPlugin extends MantisPlugin {
             return $func($bug);
         }
         else {
-            return '(don\'t know how to render field "' . $field_name . '")';
+            return sprintf(plugin_lang_get('unknown_field'), $field_name);
         }
     }
 
