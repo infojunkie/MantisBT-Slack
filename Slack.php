@@ -192,7 +192,7 @@ class SlackPlugin extends MantisPlugin {
         $payload = array(
             'channel' => $channel,
             'username' => plugin_config_get('bot_name'),
-            'text' => $msg
+            'text' => str_replace('+', '%2B', $msg),
         );
         $bot_icon = plugin_config_get('bot_icon');
         if (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
