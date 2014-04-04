@@ -192,7 +192,7 @@ class SlackPlugin extends MantisPlugin {
         $payload = array(
             'channel' => $channel,
             'username' => plugin_config_get('bot_name'),
-            'text' => str_replace('+', '%2B', $msg),
+            'text' => $msg,
         );
         $bot_icon = plugin_config_get('bot_icon');
         if (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
@@ -203,7 +203,7 @@ class SlackPlugin extends MantisPlugin {
         if ($attachment) {
             $payload['attachments'] = array($attachment);
         }
-        $data = 'payload=' . json_encode($payload);
+        $data = array('payload' => json_encode($payload));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $result = curl_exec($ch);
         curl_close($ch);
