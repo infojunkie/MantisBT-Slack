@@ -59,19 +59,8 @@ class SlackPlugin extends MantisPlugin {
         $reporter = '@' . user_get_name($bug->reporter_id);
         $handler = empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id));
         $modifier = '@' . user_get_name(auth_get_current_user_id());
-        $status = get_enum_element( 'status', $bug->status );
-        switch ($event) {
-            case 'EVENT_REPORT_BUG':
-                $msg = sprintf(plugin_lang_get('bug_created'),
-                    $project, $reporter, $url, $summary
-                );
-                break;
-            case 'EVENT_UPDATE_BUG':
-                $msg = sprintf(plugin_lang_get('bug_updated'),
-                    $project, $modifier, $url, $summary
-                );
-                break;
-        }
+        $status = get_enum_element('status', $bug->status);
+        $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'), $project, $reporter, $url, $summary);
         $this->notify($msg, $this->get_channel($project), $this->get_attachment($bug));
     }
 
@@ -83,18 +72,7 @@ class SlackPlugin extends MantisPlugin {
         $reporter_id = bugnote_get_field($bugnote_id, 'reporter_id');
         $reporter = '@' . user_get_name($reporter_id);
         $note = bugnote_get_text($bugnote_id);
-        switch ($event) {
-            case 'EVENT_BUGNOTE_ADD':
-                $msg = sprintf(plugin_lang_get('bugnote_created'),
-                    $project, $reporter, $url, $summary, $note
-                );
-                break;
-            case 'EVENT_BUGNOTE_EDIT':
-                $msg = sprintf(plugin_lang_get('bugnote_updated'),
-                    $project, $reporter, $url, $summary, $note
-                );
-                break;                
-        }
+        $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'), $project, $reporter, $url, $summary, $note);
         $this->notify($msg, $this->get_channel($project));
     }
 
@@ -104,7 +82,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     static function clean_summary($summary) {
-        return strip_tags(preg_replace('/\[<a (.*)\/a>\]/', '', $summary));
+        return strip_tags(html_entity_decode($summary));
     }
 
     function get_attachment($bug) {
