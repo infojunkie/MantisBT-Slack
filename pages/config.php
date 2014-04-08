@@ -76,7 +76,7 @@ print_manage_menu( );
         <p>
           Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
-          The current value of this option is:<pre><?php print_r(plugin_config_get( 'channels' ))?></pre>
+          The current value of this option is:<pre><?php var_export(plugin_config_get( 'channels' ))?></pre>
         </p>
       </td>
     </tr>
@@ -97,7 +97,7 @@ print_manage_menu( );
             $t_all = implode( ', ', $t_columns );
           ?>
           Available column names are:<div><textarea name="all_columns" readonly="readonly" cols="80" rows="5"><?php echo $t_all ?></textarea></div>
-          The current value of this option is:<pre><?php print_r(plugin_config_get( 'columns' ))?></pre>
+          The current value of this option is:<pre><?php var_export(plugin_config_get( 'columns' ))?></pre>
         </p>
       </td>
     </tr>
