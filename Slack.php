@@ -53,24 +53,20 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function new_update_bug($event, $bug, $bug_id) {
+        $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
-        $project = project_get_name($bug->project_id);
-        $reporter = '@' . user_get_name($bug->reporter_id);
-        $handler = empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id));
-        $modifier = '@' . user_get_name(auth_get_current_user_id());
-        $status = get_enum_element('status', $bug->status);
+        $reporter = $event === 'EVENT_REPORT_BUG' ? ('@' . user_get_name($bug->reporter_id)) : ('@' . user_get_name(auth_get_current_user_id()));
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'), $project, $reporter, $url, $summary);
         $this->notify($msg, $this->get_channel($project), $this->get_attachment($bug));
     }
 
     function new_update_bugnote($event, $bug_id, $bugnote_id) {
-        $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $bug = bug_get($bug_id);
+        $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
-        $reporter_id = bugnote_get_field($bugnote_id, 'reporter_id');
-        $reporter = '@' . user_get_name($reporter_id);
+        $reporter = '@' . user_get_name(bugnote_get_field($bugnote_id, 'reporter_id'));
         $note = bugnote_get_text($bugnote_id);
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'), $project, $reporter, $url, $summary, $note);
         $this->notify($msg, $this->get_channel($project));
@@ -109,7 +105,7 @@ class SlackPlugin extends MantisPlugin {
             'id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->id), $bug->id); },
             'project_id' => function($bug) { return project_get_name($bug->project_id); },
             'reporter_id' => function($bug) { return '@' . user_get_name($bug->reporter_id); },
-            'handler_id' => function($bug) { return '@' . user_get_name($bug->handler_id); },
+            'handler_id' => function($bug) { return empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id)); },
             'duplicate_id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->duplicate_id), $bug->duplicate_id); },
             'priority' => function($bug) { return get_enum_element( 'priority', $bug->priority ); },
             'severity' => function($bug) { return get_enum_element( 'severity', $bug->severity ); },
