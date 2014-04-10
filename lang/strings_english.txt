@@ -1,8 +1,5 @@
 <?php
 
-# Copyright (c) 2010 John Reese
-# Licensed under the MIT license
-
 $s_plugin_Slack_ = '';
 $s_plugin_Slack_title = 'Slack Integration';
 $s_plugin_Slack_description = 'Adds Slack integration to Mantis.';
