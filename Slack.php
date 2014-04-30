@@ -42,16 +42,6 @@ class SlackPlugin extends MantisPlugin {
         }
     }
 
-    function hooks() {
-        return array(
-            'EVENT_REPORT_BUG' => 'new_update_bug',
-            'EVENT_UPDATE_BUG' => 'new_update_bug',
-            'EVENT_BUGNOTE_ADD' => 'new_update_bugnote',
-            'EVENT_BUGNOTE_EDIT' => 'new_update_bugnote',
-            'EVENT_BUG_ACTION' => 'bug_action',
-        );
-    }
-
     function config() {
         return array(
             'instance' => '',
@@ -70,31 +60,67 @@ class SlackPlugin extends MantisPlugin {
         );
     }
 
-    function new_update_bug($event, $bug, $bug_id) {
+    function hooks() {
+        return array(
+            'EVENT_REPORT_BUG' => 'bug_report_update',
+            'EVENT_UPDATE_BUG' => 'bug_report_update',
+            'EVENT_BUG_DELETED' => 'bug_deleted',
+            'EVENT_BUG_ACTION' => 'bug_action',
+            'EVENT_BUGNOTE_ADD' => 'bugnote_add_edit',
+            'EVENT_BUGNOTE_EDIT' => 'bugnote_add_edit',
+            'EVENT_BUGNOTE_DELETED' => 'bugnote_deleted',
+        );
+    }
+
+    function bug_report_update($event, $bug, $bug_id) {
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
-        $reporter = $event === 'EVENT_REPORT_BUG' ? ('@' . user_get_name($bug->reporter_id)) : ('@' . user_get_name(auth_get_current_user_id()));
-        $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'), $project, $reporter, $url, $summary);
+        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'), 
+            $project, $reporter, $url, $summary
+        );
         $this->notify($msg, $this->get_channel($project), $this->get_attachment($bug));
     }
 
-    function new_update_bugnote($event, $bug_id, $bugnote_id) {
+    function bug_action($event, $action, $bug_id) {
+        if ($action !== 'DELETE') {
+            $bug = bug_get($bug_id);
+            $this->bug_report_update('EVENT_UPDATE_BUG', $bug, $bug_id);
+        }
+    }
+
+    function bug_deleted($event, $bug_id) {
+        $bug = bug_get($bug_id);
+        $project = project_get_name($bug->project_id);
+        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
+        $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
+        $this->notify($msg, $this->get_channel($project));
+    }
+
+    function bugnote_add_edit($event, $bug_id, $bugnote_id) {
         $bug = bug_get($bug_id);
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
-        $reporter = $event === 'EVENT_BUGNOTE_ADD' ? 
-            ('@' . user_get_name(bugnote_get_field($bugnote_id, 'reporter_id'))) : 
-            ('@' . user_get_name(auth_get_current_user_id()));
+        $reporter = '@' . user_get_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
-        $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'), $project, $reporter, $url, $summary, $note);
+        $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'), 
+            $project, $reporter, $url, $summary, $note
+        );
+        file_put_contents('/tmp/mantis.txt', print_r($msg, true));
         $this->notify($msg, $this->get_channel($project));
     }
 
-    function bug_action($event, $action, $bug_id) {
+    function bugnote_deleted($event, $bug_id, $bugnote_id) {
         $bug = bug_get($bug_id);
-        $this->new_update_bug('EVENT_UPDATE_BUG', $bug, $bug_id);
+        $project = project_get_name($bug->project_id);
+        $url = string_get_bug_view_url_with_fqdn($bug_id);
+        $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
+        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
+        $this->notify($msg, $this->get_channel($project));
     }
 
     static function clean_summary($summary) {
