@@ -109,7 +109,6 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'), 
             $project, $reporter, $url, $summary, $note
         );
-        file_put_contents('/tmp/mantis.txt', print_r($msg, true));
         $this->notify($msg, $this->get_channel($project));
     }
 
