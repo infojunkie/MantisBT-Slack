@@ -33,13 +33,15 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function install() {
-        if (!extension_loaded('curl')) {
-            error_parameters(plugin_lang_get('error_no_curl'));
-            trigger_error(ERROR_PLUGIN_INSTALL_FAILED, ERROR);
+        if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+            plugin_error(ERROR_PHP_VERSION, ERROR);
             return false;
-        } else {
-            return true;
         }
+        if (!extension_loaded('curl')) {
+            plugin_error(ERROR_NO_CURL, ERROR);
+            return false;
+        }
+        return true;
     }
 
     function config() {
