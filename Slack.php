@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  * or see http://www.gnu.org/licenses/.
  */
+require_once('FastJSON.class.php5');
 
 class SlackPlugin extends MantisPlugin {
     function register() {
@@ -147,45 +148,81 @@ class SlackPlugin extends MantisPlugin {
         return $attachment;
     }
 
+	function customIterationFunc($bug, $t_id) {
+        return custom_field_get_value( $t_id, $bug->id );
+    }
+
     function format_value($bug, $field_name) {
         $values = array(
-            'id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->id), $bug->id); },
-            'project_id' => function($bug) { return project_get_name($bug->project_id); },
-            'reporter_id' => function($bug) { return '@' . user_get_name($bug->reporter_id); },
-            'handler_id' => function($bug) { return empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id)); },
-            'duplicate_id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->duplicate_id), $bug->duplicate_id); },
-            'priority' => function($bug) { return get_enum_element( 'priority', $bug->priority ); },
-            'severity' => function($bug) { return get_enum_element( 'severity', $bug->severity ); },
-            'reproducibility' => function($bug) { return get_enum_element( 'reproducibility', $bug->reproducibility ); },
-            'status' => function($bug) { return get_enum_element( 'status', $bug->status ); },
-            'resolution' => function($bug) { return get_enum_element( 'resolution', $bug->resolution ); },
-            'projection' => function($bug) { return get_enum_element( 'projection', $bug->projection ); },
-            'category_id' => function($bug) { return category_full_name( $bug->category_id, false ); },
-            'eta' => function($bug) { return get_enum_element( 'eta', $bug->eta ); },
-            'view_state' => function($bug) { return $bug->view_state == VS_PRIVATE ? lang_get('private') : lang_get('public'); },
-            'sponsorship_total' => function($bug) { return sponsorship_format_amount( $bug->sponsorship_total ); },
-            'os' => function($bug) { return $bug->os; },
-            'os_build' => function($bug) { return $bug->os_build; },
-            'platform' => function($bug) { return $bug->platform; },
-            'version' => function($bug) { return $bug->version; },
-            'fixed_in_version' => function($bug) { return $bug->fixed_in_version; },
-            'target_version' => function($bug) { return $bug->target_version; },
-            'build' => function($bug) { return $bug->build; },
-            'summary' => function($bug) { return SlackPlugin::clean_summary(bug_format_summary($bug->id, SUMMARY_FIELD)); },
-            'last_updated' => function($bug) { return date( config_get( 'short_date_format' ), $bug->last_updated ); },
-            'date_submitted' => function($bug) { return date( config_get( 'short_date_format' ), $bug->date_submitted ); },
-            'due_date' => function($bug) { return date( config_get( 'short_date_format' ), $bug->due_date ); },
-            'description' => function($bug) { return string_display_links( $bug->description ); },
-            'steps_to_reproduce' => function($bug) { return string_display_links( $bug->steps_to_reproduce ); },
-            'additional_information' => function($bug) { return string_display_links( $bug->additional_information ); },
+            'id' => idFunc,
+            'project_id' => projIdFunc,
+            'reporter_id' => reporterIdFunc,
+            'handler_id' => handlerIdFunc,
+            'duplicate_id' => duplicateIdFunc,
+            'priority' => priorityFunc,
+            'severity' => severityFunc,
+            'reproducibility' => reproducibilityFunc,
+            'status' => statusFunc,
+            'resolution' => resolutionFunc,
+            'projection' => projectionFunc,
+            'category_id' => categoryIdFunc,
+            'eta' => etaFunc,
+            'view_state' => viewStateFunc,
+            'sponsorship_total' => sponsorshipTotalFunc,
+            'os' => osFunc,
+            'os_build' => osBuildFunc,
+            'platform' => platformFunc,
+            'version' => versionFunc,
+            'fixed_in_version' => fixedInVersionFunc,
+            'target_version' => targetVersionFunc,
+            'build' => buildFunc,
+            'summary' => summaryFunc,
+            'last_updated' => lastUpdatedFunc,
+            'date_submitted' => dateSubmittedFunc,
+            'due_date' => dueDateFunc,
+            'description' => descriptionFunc,
+            'steps_to_reproduce' => stepsToReproduceFunc,
+            'additional_information' => additionalInformationFunc,
         );
+
+		if( !function_exists('idFunc') )
+		{
+			function idFunc($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->id), $bug->id); }
+			function projIdFunc($bug) { return project_get_name($bug->project_id); }
+			function reporterIdFunc($bug) { return '@' . user_get_name($bug->reporter_id); }
+			function handlerIdFunc($bug) { return empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id)); }
+			function duplicateIdFunc($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->duplicate_id), $bug->duplicate_id); }
+			function priorityFunc($bug) { return get_enum_element( 'priority', $bug->priority ); }
+			function severityFunc($bug) { return get_enum_element( 'severity', $bug->severity ); }
+			function reproducibilityFunc($bug) { return get_enum_element( 'reproducibility', $bug->reproducibility ); }
+			function statusFunc($bug) { return get_enum_element( 'status', $bug->status ); }
+			function resolutionFunc($bug) { return get_enum_element( 'resolution', $bug->resolution ); }
+			function projectionFunc($bug) { return get_enum_element( 'projection', $bug->projection ); }
+			function categoryIdFunc($bug) { return category_full_name( $bug->category_id, false ); }
+			function etaFunc($bug) { return get_enum_element( 'eta', $bug->eta ); }
+			function viewStateFunc($bug) { return $bug->view_state == VS_PRIVATE ? lang_get('private') : lang_get('public'); }
+			function sponsorshipTotalFunc($bug) { return sponsorship_format_amount( $bug->sponsorship_total ); }
+			function osFunc($bug) { return $bug->os; }
+			function osBuildFunc($bug) { return $bug->os_build; }
+			function platformFunc($bug) { return $bug->platform; }
+			function versionFunc($bug) { return $bug->version; }
+			function fixedInVersionFunc($bug) { return $bug->fixed_in_version; }
+			function targetVersionFunc($bug) { return $bug->target_version; }
+			function buildFunc($bug) { return $bug->build; }
+			function summaryFunc($bug) { return SlackPlugin::clean_summary(bug_format_summary($bug->id, SUMMARY_FIELD)); }
+			function lastUpdatedFunc($bug) { return date( config_get( 'short_date_format' ), $bug->last_updated ); }
+			function dateSubmittedFunc($bug) { return date( config_get( 'short_date_format' ), $bug->date_submitted ); }
+			function dueDateFunc($bug) { return date( config_get( 'short_date_format' ), $bug->due_date ); }
+			function descriptionFunc($bug) { return string_display_links( $bug->description ); }
+			function stepsToReproduceFunc($bug) { return string_display_links( $bug->steps_to_reproduce ); }
+			function additionalInformationFunc($bug) { return string_display_links( $bug->additional_information ); }
+		}
+        
         // Discover custom fields.
         $t_related_custom_field_ids = custom_field_get_linked_ids( $bug->project_id );
         foreach ( $t_related_custom_field_ids as $t_id ) {
             $t_def = custom_field_get_definition( $t_id );
-            $values['custom_' . $t_def['name']] = function($bug) use ($t_id) {
-                return custom_field_get_value( $t_id, $bug->id );
-            };
+            $values['custom_' . $t_def['name']] = $this->customIterationFunc($bug, $t_id);
         }
         if (isset($values[$field_name])) {
             $func = $values[$field_name];
@@ -224,7 +261,7 @@ class SlackPlugin extends MantisPlugin {
         if ($attachment) {
             $payload['attachments'] = array($attachment);
         }
-        $data = array('payload' => json_encode($payload));
+        $data = array('payload' => FastJSON::($payload));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $result = curl_exec($ch);
         curl_close($ch);
