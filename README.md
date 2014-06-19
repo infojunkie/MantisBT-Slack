@@ -5,6 +5,7 @@ A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](htt
 
 
 # Setup
+* Extract this repo to your *Mantis folder/plugins/Slack*.
 * Setup a new Slack instance and note the subdomain used.
 * On the Slack side, add a new "Incoming Webhooks" integration and note the token that Slack generates for you.
 * On the MantisBT side, access the plugin's configuration page and fill in your Slack subdomain and the webhook token.
