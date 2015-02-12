@@ -46,8 +46,7 @@ class SlackPlugin extends MantisPlugin {
 
     function config() {
         return array(
-            'instance' => '',
-            'token' => '',
+            'url' => '',
             'bot_name' => 'mantis',
             'bot_icon' => '',
             'channels' => array(),
@@ -79,7 +78,7 @@ class SlackPlugin extends MantisPlugin {
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
         $reporter = '@' . user_get_name(auth_get_current_user_id());
-        $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'), 
+        $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
         );
         $this->notify($msg, $this->get_channel($project), $this->get_attachment($bug));
@@ -108,7 +107,7 @@ class SlackPlugin extends MantisPlugin {
         $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
-        $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'), 
+        $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
             $project, $reporter, $url, $summary, $note
         );
         $this->notify($msg, $this->get_channel($project));
@@ -134,7 +133,7 @@ class SlackPlugin extends MantisPlugin {
         foreach ($t_columns as $t_column) {
             $title = column_get_title( $t_column );
             $value = $this->format_value($bug, $t_column);
-            
+
             if ($title && $value) {
                 $attachment['fallback'] .= $title . ': ' . $value . "\n";
                 $attachment['fields'][] = array(
@@ -204,9 +203,8 @@ class SlackPlugin extends MantisPlugin {
     function notify($msg, $channel, $attachment = FALSE) {
         $ch = curl_init();
         // @see https://my.slack.com/services/new/incoming-webhook
-        $url = sprintf('https://%s.slack.com/services/hooks/incoming-webhook?token=%s', 
-            plugin_config_get('instance'), plugin_config_get('token')
-        );
+        // remove istance and url and add url config , see configurations with url above
+        $url = sprintf('%s', plugin_config_get('url'));
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
