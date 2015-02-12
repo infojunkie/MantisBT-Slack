@@ -28,8 +28,8 @@ $f_bot_name = gpc_get_string( 'bot_name' );
 $f_bot_icon = gpc_get_string( 'bot_icon' );
 $f_default_channel = gpc_get_string( 'default_channel' );
 
-if( plugin_config_get( 'url' ) != $f_instance ) {
-  plugin_config_set( 'url', $f_instance );
+if( plugin_config_get( 'url' ) != $f_url ) {
+  plugin_config_set( 'url', $f_url );
 }
 
 
