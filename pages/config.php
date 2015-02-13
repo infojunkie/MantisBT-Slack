@@ -41,21 +41,13 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
-        <?php echo plugin_lang_get( 'instance' )?>
+        <?php echo plugin_lang_get( 'url_webhook' )?>
       </td>
       <td  colspan="2">
-        <input type="text" name="instance" value="<?php echo plugin_config_get( 'instance' )?>" />
+        <input type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
       </td>
     </tr>
 
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'token' )?>
-      </td>
-      <td  colspan="2">
-        <input type="text" name="token" value="<?php echo plugin_config_get( 'token' )?>" />
-      </td>
-    </tr>
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
@@ -109,7 +101,7 @@ print_manage_menu( );
           Specifies the bug fields that should be attached to the Slack notifications.
         </p>
         <p>
-          Option name is <strong>plugin_Slack_columns</strong> and is an array of bug column names. 
+          Option name is <strong>plugin_Slack_columns</strong> and is an array of bug column names.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           <?php
             $t_columns = columns_get_all( $t_project_id );
