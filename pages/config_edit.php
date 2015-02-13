@@ -23,13 +23,13 @@ form_security_validate( 'plugin_Slack_config_edit' );
 auth_reauthenticate( );
 access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 
-$f_url = gpc_get_string( 'url' );
+$f_webhook_url = gpc_get_string( 'webhook_url' );
 $f_bot_name = gpc_get_string( 'bot_name' );
 $f_bot_icon = gpc_get_string( 'bot_icon' );
 $f_default_channel = gpc_get_string( 'default_channel' );
 
-if( plugin_config_get( 'url' ) != $f_url ) {
-  plugin_config_set( 'url', $f_url );
+if( plugin_config_get( 'webhook_url' ) != $f_webhook_url ) {
+  plugin_config_set( 'webhook_url', $f_webhook_url );
 }
 
 

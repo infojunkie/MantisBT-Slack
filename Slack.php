@@ -46,7 +46,7 @@ class SlackPlugin extends MantisPlugin {
 
     function config() {
         return array(
-            'url' => '',
+            'webhook_url' => '',
             'bot_name' => 'mantis',
             'bot_icon' => '',
             'channels' => array(),
@@ -203,8 +203,8 @@ class SlackPlugin extends MantisPlugin {
     function notify($msg, $channel, $attachment = FALSE) {
         $ch = curl_init();
         // @see https://my.slack.com/services/new/incoming-webhook
-        // remove istance and url and add url config , see configurations with url above
-        $url = sprintf('%s', plugin_config_get('url'));
+        // remove istance and token and add plugin_Slack_url config , see configurations with url above
+        $url = sprintf('%s', plugin_config_get('webhook_url'));
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

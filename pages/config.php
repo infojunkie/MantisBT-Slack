@@ -41,14 +41,14 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
-        <?php echo plugin_lang_get( 'url' )?>
+        <?php echo plugin_lang_get( 'webhook_url' )?>
       </td>
       <td  colspan="2">
-        <input type="text" name="url" value="<?php echo plugin_config_get( 'url' )?>" />
+        <input type="text" name="webhook_url" value="<?php echo plugin_config_get( 'webhook_url' )?>" />
       </td>
     </tr>
 
-    
+
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
         <?php echo plugin_lang_get( 'bot_name' )?>
