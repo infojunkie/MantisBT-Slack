@@ -76,7 +76,7 @@ class SlackPlugin extends MantisPlugin {
     function bug_report_update($event, $bug, $bug_id) {
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
-        $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
+        $summary = $this->clean_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
@@ -95,7 +95,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
-        $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
+        $summary = $this->clean_summary($bug);
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
         $this->notify($msg, $this->get_channel($project));
     }
@@ -104,7 +104,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
-        $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
+        $summary = $this->clean_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
@@ -117,13 +117,14 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
-        $summary = SlackPlugin::clean_summary(bug_format_summary($bug_id, SUMMARY_FIELD));
+        $summary = $this->clean_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
         $this->notify($msg, $this->get_channel($project));
     }
 
-    static function clean_summary($summary) {
+    function clean_summary($bug) {
+        $summary = bug_format_id($bug->id) . ': ' . string_display_line_links($bug->summary);
         return strip_tags(html_entity_decode($summary));
     }
 
@@ -147,6 +148,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function format_value($bug, $field_name) {
+        $self = $this;
         $values = array(
             'id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->id), $bug->id); },
             'project_id' => function($bug) { return project_get_name($bug->project_id); },
@@ -170,7 +172,7 @@ class SlackPlugin extends MantisPlugin {
             'fixed_in_version' => function($bug) { return $bug->fixed_in_version; },
             'target_version' => function($bug) { return $bug->target_version; },
             'build' => function($bug) { return $bug->build; },
-            'summary' => function($bug) { return SlackPlugin::clean_summary(bug_format_summary($bug->id, SUMMARY_FIELD)); },
+            'summary' => function($bug) use($self) { return $self->clean_summary($bug); },
             'last_updated' => function($bug) { return date( config_get( 'short_date_format' ), $bug->last_updated ); },
             'date_submitted' => function($bug) { return date( config_get( 'short_date_format' ), $bug->date_submitted ); },
             'due_date' => function($bug) { return date( config_get( 'short_date_format' ), $bug->due_date ); },
@@ -227,5 +229,4 @@ class SlackPlugin extends MantisPlugin {
         $result = curl_exec($ch);
         curl_close($ch);
     }
-
 }
