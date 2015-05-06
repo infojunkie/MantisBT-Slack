@@ -37,6 +37,7 @@ $s_plugin_Slack_bugnote_updated = "[%s] %s edited a comment on <%s|%s> saying:\n
 $s_plugin_Slack_bugnote_deleted = "[%s] %s deleted a comment on <%s|%s>.";
 $s_plugin_Slack_no_user = '(no one)';
 $s_plugin_Slack_unknown_field = '(don\'t know how to render field "%s")';
+$s_plugin_Slack_skip = 'Skip Slack notification';
 
 $MANTIS_ERROR['plugin_Slack_ERROR_NO_CURL'] = 'The Slack plugin requires the cURL PHP extension (http://php.net/curl)';
 $MANTIS_ERROR['plugin_Slack_ERROR_PHP_VERSION'] = 'The Slack plugin requires PHP 5.3.0 or higher';

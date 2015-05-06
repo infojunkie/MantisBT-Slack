@@ -19,6 +19,8 @@
  */
 
 class SlackPlugin extends MantisPlugin {
+    var $skip = false;
+
     function register() {
         $this->name = plugin_lang_get( 'title' );
         $this->description = plugin_lang_get( 'description' );
@@ -70,10 +72,21 @@ class SlackPlugin extends MantisPlugin {
             'EVENT_BUGNOTE_ADD' => 'bugnote_add_edit',
             'EVENT_BUGNOTE_EDIT' => 'bugnote_add_edit',
             'EVENT_BUGNOTE_DELETED' => 'bugnote_deleted',
+            'EVENT_BUGNOTE_ADD_FORM' => 'bugnote_add_form',
         );
     }
 
+    function bugnote_add_form($event, $bug_id) {
+        if ($_SERVER['PHP_SELF'] !== '/bug_update_page.php') return;
+
+        echo '<tr><td class="center" colspan="6">';
+        echo '<input ', helper_get_tab_index(), ' name="slack_skip" type="checkbox" >' . plugin_lang_get('skip') . '</input>';
+        echo '</td></tr>';
+    }
+
     function bug_report_update($event, $bug, $bug_id) {
+        $this->skip = gpc_get_bool('slack_skip', false);
+
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = $this->clean_summary($bug);
@@ -85,6 +98,8 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bug_action($event, $action, $bug_id) {
+        $this->skip = gpc_get_bool('slack_skip', false);
+
         if ($action !== 'DELETE') {
             $bug = bug_get($bug_id);
             $this->bug_report_update('EVENT_UPDATE_BUG', $bug, $bug_id);
@@ -92,6 +107,8 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bug_deleted($event, $bug_id) {
+        $this->skip = gpc_get_bool('slack_skip', false);
+
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
@@ -101,6 +118,8 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bugnote_add_edit($event, $bug_id, $bugnote_id) {
+        $this->skip = gpc_get_bool('slack_skip', false);
+
         $bug = bug_get($bug_id);
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
@@ -114,6 +133,8 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bugnote_deleted($event, $bug_id, $bugnote_id) {
+        $this->skip = gpc_get_bool('slack_skip', false);
+
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
@@ -203,6 +224,8 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function notify($msg, $channel, $attachment = FALSE) {
+        if ($this->skip) return;
+
         $ch = curl_init();
         // @see https://my.slack.com/services/new/incoming-webhook
         // remove istance and token and add plugin_Slack_url config , see configurations with url above
