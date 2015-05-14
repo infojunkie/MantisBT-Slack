@@ -221,11 +221,12 @@ class SlackPlugin extends MantisPlugin {
 
     function get_channel($project) {
         $channels = plugin_config_get('channels');
-        return isset($channels[$project]) ? $channels[$project] : plugin_config_get('default_channel');
+        return array_key_exists($project, $channels) ? $channels[$project] : plugin_config_get('default_channel');
     }
 
     function notify($msg, $channel, $attachment = FALSE) {
         if ($this->skip) return;
+        if (empty($channel)) return;
 
         $ch = curl_init();
         // @see https://my.slack.com/services/new/incoming-webhook
