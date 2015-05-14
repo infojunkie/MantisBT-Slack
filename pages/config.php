@@ -69,6 +69,15 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
+        <?php echo plugin_lang_get( 'skip_bulk' )?>
+      </td>
+      <td  colspan="2">
+        <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> />
+      </td>
+    </tr>
+
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category">
         <?php echo plugin_lang_get( 'default_channel' )?>
       </td>
       <td  colspan="2">

@@ -25,13 +25,13 @@ class SlackPlugin extends MantisPlugin {
         $this->name = plugin_lang_get( 'title' );
         $this->description = plugin_lang_get( 'description' );
         $this->page = 'config';
-        $this->version = '0.1';
+        $this->version = '1.0';
         $this->requires = array(
             'MantisCore' => '>= 1.2.0',
         );
         $this->author = 'Karim Ratib';
-        $this->contact = 'kratib@meedan.net';
-        $this->url = 'http://meedan.org';
+        $this->contact = 'karim@meedan.com';
+        $this->url = 'http://meedan.com';
     }
 
     function install() {
@@ -51,6 +51,7 @@ class SlackPlugin extends MantisPlugin {
             'url_webhook' => '',
             'bot_name' => 'mantis',
             'bot_icon' => '',
+            'skip_bulk' => true,
             'channels' => array(),
             'default_channel' => '#general',
             'columns' => array(
@@ -85,7 +86,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bug_report_update($event, $bug, $bug_id) {
-        $this->skip = gpc_get_bool('slack_skip', false);
+        $this->skip = $this->skip || gpc_get_bool('slack_skip');
 
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
@@ -98,7 +99,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bug_action($event, $action, $bug_id) {
-        $this->skip = gpc_get_bool('slack_skip', false);
+        $this->skip = $this->skip || gpc_get_bool('slack_skip') || plugin_config_get('skip_bulk');
 
         if ($action !== 'DELETE') {
             $bug = bug_get($bug_id);
@@ -107,7 +108,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bug_deleted($event, $bug_id) {
-        $this->skip = gpc_get_bool('slack_skip', false);
+        $this->skip = $this->skip || gpc_get_bool('slack_skip');
 
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
@@ -118,7 +119,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bugnote_add_edit($event, $bug_id, $bugnote_id) {
-        $this->skip = gpc_get_bool('slack_skip', false);
+        $this->skip = $this->skip || gpc_get_bool('slack_skip');
 
         $bug = bug_get($bug_id);
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
@@ -133,7 +134,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bugnote_deleted($event, $bug_id, $bugnote_id) {
-        $this->skip = gpc_get_bool('slack_skip', false);
+        $this->skip = $this->skip || gpc_get_bool('slack_skip');
 
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);

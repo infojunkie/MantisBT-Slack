@@ -26,12 +26,12 @@ access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 $f_url_webhook = gpc_get_string( 'url_webhook' );
 $f_bot_name = gpc_get_string( 'bot_name' );
 $f_bot_icon = gpc_get_string( 'bot_icon' );
+$f_skip_bulk = gpc_get_bool( 'skip_bulk' );
 $f_default_channel = gpc_get_string( 'default_channel' );
 
 if( plugin_config_get( 'url_webhook' ) != $f_url_webhook ) {
   plugin_config_set( 'url_webhook', $f_url_webhook );
 }
-
 
 if( plugin_config_get( 'bot_name' ) != $f_bot_name ) {
   plugin_config_set( 'bot_name', $f_bot_name );
@@ -39,6 +39,10 @@ if( plugin_config_get( 'bot_name' ) != $f_bot_name ) {
 
 if( plugin_config_get( 'bot_icon' ) != $f_bot_icon ) {
   plugin_config_set( 'bot_icon', $f_bot_icon );
+}
+
+if( plugin_config_get( 'skip_bulk' ) != $f_skip_bulk ) {
+  plugin_config_set( 'skip_bulk', $f_skip_bulk );
 }
 
 if( plugin_config_get( 'default_channel' ) != $f_default_channel ) {
