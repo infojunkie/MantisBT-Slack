@@ -255,7 +255,8 @@ class SlackPlugin extends MantisPlugin {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $result = curl_exec($ch);
         if ($result !== 'ok') {
-            plugin_error(ERROR_CURL, ERROR);
+            trigger_error ( $result, E_USER_WARNING);
+            plugin_error('ERROR_CURL', E_USER_ERROR);
         }
         curl_close($ch);
     }
