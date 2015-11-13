@@ -231,7 +231,7 @@ class SlackPlugin extends MantisPlugin {
         $ch = curl_init();
         // @see https://my.slack.com/services/new/incoming-webhook
         // remove istance and token and add plugin_Slack_url config , see configurations with url above
-        $url = sprintf('%s', plugin_config_get('url_webhook'));
+        $url = sprintf('%s', trim(plugin_config_get('url_webhook')));
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -241,11 +241,13 @@ class SlackPlugin extends MantisPlugin {
             'text' => $msg,
             'link_names' => 1,
         );
-        $bot_icon = plugin_config_get('bot_icon');
-        if (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
+        $bot_icon = trim(plugin_config_get('bot_icon'));
+        if (empty($bot_icon)) {
+            $payload['icon_url'] = 'https://raw.githubusercontent.com/bitwombat/MantisBT-Slack/fail_louder/mantis_logo.png';
+        } elseif (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
             $payload['icon_emoji'] = $bot_icon;
         } elseif ($bot_icon) {
-            $payload['icon_url'] = $bot_icon;
+            $payload['icon_url'] = trim($bot_icon);
         }
         if ($attachment) {
             $payload['attachments'] = array($attachment);
@@ -253,6 +255,10 @@ class SlackPlugin extends MantisPlugin {
         $data = array('payload' => json_encode($payload));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $result = curl_exec($ch);
+        if ($result !== 'ok') {
+            trigger_error ( $result, E_USER_WARNING);
+            plugin_error('ERROR_CURL', E_USER_ERROR);
+        }
         curl_close($ch);
     }
 }

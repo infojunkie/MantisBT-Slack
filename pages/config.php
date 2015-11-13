@@ -63,6 +63,10 @@ print_manage_menu( );
         <?php echo plugin_lang_get( 'bot_icon' )?>
       </td>
       <td  colspan="2">
+        <p>
+          Can be either a URL pointing to small image or an emoji of the form :emoji:</br>
+          Defaults to the Mantis logo.
+        </p>
         <input type="text" name="bot_icon" value="<?php echo plugin_config_get( 'bot_icon' )?>" />
       </td>
     </tr>
