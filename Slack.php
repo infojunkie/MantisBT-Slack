@@ -52,6 +52,7 @@ class SlackPlugin extends MantisPlugin {
             'bot_name' => 'mantis',
             'bot_icon' => '',
             'skip_bulk' => true,
+            'link_names' => false,
             'channels' => array(),
             'default_channel' => '#general',
             'columns' => array(
@@ -239,7 +240,7 @@ class SlackPlugin extends MantisPlugin {
             'channel' => $channel,
             'username' => plugin_config_get('bot_name'),
             'text' => $msg,
-            'link_names' => 1,
+            'link_names' => plugin_config_get('link_names'),
         );
         $bot_icon = trim(plugin_config_get('bot_icon'));
         if (empty($bot_icon)) {

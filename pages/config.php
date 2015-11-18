@@ -82,6 +82,15 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
+        <?php echo plugin_lang_get( 'link_names' )?>
+      </td>
+      <td  colspan="2">
+        <input type="checkbox" name="link_names" <?php if (plugin_config_get( 'link_names' )) echo "checked"; ?> />
+      </td>
+    </tr>
+
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category">
         <?php echo plugin_lang_get( 'default_channel' )?>
       </td>
       <td  colspan="2">

@@ -27,6 +27,7 @@ $f_url_webhook = gpc_get_string( 'url_webhook' );
 $f_bot_name = gpc_get_string( 'bot_name' );
 $f_bot_icon = gpc_get_string( 'bot_icon' );
 $f_skip_bulk = gpc_get_bool( 'skip_bulk' );
+$f_link_names = gpc_get_bool( 'link_names' );
 $f_default_channel = gpc_get_string( 'default_channel' );
 
 if( plugin_config_get( 'url_webhook' ) != $f_url_webhook ) {
@@ -43,6 +44,10 @@ if( plugin_config_get( 'bot_icon' ) != $f_bot_icon ) {
 
 if( plugin_config_get( 'skip_bulk' ) != $f_skip_bulk ) {
   plugin_config_set( 'skip_bulk', $f_skip_bulk );
+}
+
+if( plugin_config_get( 'link_names' ) != $f_link_names ) {
+  plugin_config_set( 'link_names', $f_link_names );
 }
 
 if( plugin_config_get( 'default_channel' ) != $f_default_channel ) {
