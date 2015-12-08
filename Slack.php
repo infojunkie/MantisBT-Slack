@@ -216,7 +216,7 @@ class SlackPlugin extends MantisPlugin {
             return $func($bug);
         }
         else {
-            return sprintf(plugin_lang_get('unknown_field'), $field_name);
+            return FALSE;
         }
     }
 
