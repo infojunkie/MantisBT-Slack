@@ -49,13 +49,13 @@ class SlackPlugin extends MantisPlugin {
     function config() {
         return array(
             'url_webhooks' => array(),
+            'url_webhook' => '',
             'bot_name' => 'mantis',
             'bot_icon' => '',
             'skip_bulk' => true,
             'link_names' => false,
             'channels' => array(),
             'default_channel' => '#general',
-            'default_webhook' => '',
             'columns' => array(
                 'status',
                 'handler_id',
@@ -228,7 +228,7 @@ class SlackPlugin extends MantisPlugin {
     
     function get_webhook($project) {
     	$webhooks = plugin_config_get('url_webhooks');
-    	return array_key_exists($project, $webhooks) ? $webhooks[$project] : plugin_config_get('default_webhook');
+    	return array_key_exists($project, $webhooks) ? $webhooks[$project] : plugin_config_get('url_webhook');
     }
 
     function notify($msg, $webhook, $channel, $attachment = FALSE) {

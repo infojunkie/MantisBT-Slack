@@ -57,6 +57,15 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
+        <?php echo plugin_lang_get( 'url_webhook' )?>
+      </td>
+      <td  colspan="2">
+        <input type="text" name="default_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
+      </td>
+    </tr>
+
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category">
         <?php echo plugin_lang_get( 'bot_name' )?>
       </td>
       <td  colspan="2">
@@ -101,15 +110,6 @@ print_manage_menu( );
       </td>
       <td  colspan="2">
         <input type="text" name="default_channel" value="<?php echo plugin_config_get( 'default_channel' )?>" />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'default_webhook' )?>
-      </td>
-      <td  colspan="2">
-        <input type="text" name="default_webhook" value="<?php echo plugin_config_get( 'default_webhook' )?>" />
       </td>
     </tr>
 
