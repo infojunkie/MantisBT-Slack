@@ -48,13 +48,14 @@ class SlackPlugin extends MantisPlugin {
 
     function config() {
         return array(
-            'url_webhook' => '',
+            'url_webhooks' => array(),
             'bot_name' => 'mantis',
             'bot_icon' => '',
             'skip_bulk' => true,
             'link_names' => false,
             'channels' => array(),
             'default_channel' => '#general',
+            'default_webhook' => '',
             'columns' => array(
                 'status',
                 'handler_id',
@@ -96,7 +97,7 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
         );
-        $this->notify($msg, $this->get_channel($project), $this->get_attachment($bug));
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug));
     }
 
     function bug_action($event, $action, $bug_id) {
@@ -116,7 +117,7 @@ class SlackPlugin extends MantisPlugin {
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $summary = $this->clean_summary($bug);
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
-        $this->notify($msg, $this->get_channel($project));
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
 
     function bugnote_add_edit($event, $bug_id, $bugnote_id) {
@@ -131,7 +132,7 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
             $project, $reporter, $url, $summary, $note
         );
-        $this->notify($msg, $this->get_channel($project));
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
 
     function bugnote_deleted($event, $bug_id, $bugnote_id) {
@@ -143,7 +144,7 @@ class SlackPlugin extends MantisPlugin {
         $summary = $this->clean_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
-        $this->notify($msg, $this->get_channel($project));
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
 
     function clean_summary($bug) {
@@ -224,15 +225,21 @@ class SlackPlugin extends MantisPlugin {
         $channels = plugin_config_get('channels');
         return array_key_exists($project, $channels) ? $channels[$project] : plugin_config_get('default_channel');
     }
+    
+    function get_webhook($project) {
+    	$webhooks = plugin_config_get('url_webhooks');
+    	return array_key_exists($project, $webhooks) ? $webhooks[$project] : plugin_config_get('default_webhook');
+    }
 
-    function notify($msg, $channel, $attachment = FALSE) {
+    function notify($msg, $webhook, $channel, $attachment = FALSE) {
         if ($this->skip) return;
         if (empty($channel)) return;
+        if (empty($webhook)) return;
 
         $ch = curl_init();
         // @see https://my.slack.com/services/new/incoming-webhook
         // remove istance and token and add plugin_Slack_url config , see configurations with url above
-        $url = sprintf('%s', trim(plugin_config_get('url_webhook')));
+        $url = sprintf('%s', trim($webhook));
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -41,13 +41,19 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
-        <?php echo plugin_lang_get( 'url_webhook' )?>
+        <?php echo plugin_lang_get( 'url_webhooks' )?>
       </td>
       <td  colspan="2">
-        <input type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
+        <p>
+          Specifies the mapping between Mantis project names and Slack webhooks.
+        </p>
+        <p>
+          Option name is <strong>plugin_Slack_url_webhooks</strong> and is an array of 'Mantis project name' => 'Slack webhook'.
+          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
+          The current value of this option is:<pre><?php var_export(plugin_config_get( 'url_webhooks' ))?></pre>
+        </p>
       </td>
     </tr>
-
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
@@ -95,6 +101,15 @@ print_manage_menu( );
       </td>
       <td  colspan="2">
         <input type="text" name="default_channel" value="<?php echo plugin_config_get( 'default_channel' )?>" />
+      </td>
+    </tr>
+
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category">
+        <?php echo plugin_lang_get( 'default_webhook' )?>
+      </td>
+      <td  colspan="2">
+        <input type="text" name="default_webhook" value="<?php echo plugin_config_get( 'default_webhook' )?>" />
       </td>
     </tr>
 
