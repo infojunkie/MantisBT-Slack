@@ -41,6 +41,15 @@ print_manage_menu( );
 
     <tr <?php echo helper_alternate_class( )?>>
       <td class="category">
+        <?php echo plugin_lang_get( 'url_webhook' )?>
+      </td>
+      <td  colspan="2">
+        <input size="80" type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
+      </td>
+    </tr>
+
+    <tr <?php echo helper_alternate_class( )?>>
+      <td class="category">
         <?php echo plugin_lang_get( 'url_webhooks' )?>
       </td>
       <td  colspan="2">
@@ -52,15 +61,6 @@ print_manage_menu( );
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           The current value of this option is:<pre><?php var_export(plugin_config_get( 'url_webhooks' ))?></pre>
         </p>
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'url_webhook' )?>
-      </td>
-      <td  colspan="2">
-        <input type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
       </td>
     </tr>
 
