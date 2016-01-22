@@ -60,7 +60,7 @@ print_manage_menu( );
         <?php echo plugin_lang_get( 'url_webhook' )?>
       </td>
       <td  colspan="2">
-        <input type="text" name="default_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
+        <input type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
       </td>
     </tr>
 
