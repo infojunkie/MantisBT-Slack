@@ -92,7 +92,7 @@ class SlackPlugin extends MantisPlugin {
 
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
-        $summary = $this->clean_summary($bug);
+        $summary = $this->format_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
@@ -115,7 +115,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
-        $summary = $this->clean_summary($bug);
+        $summary = $this->format_summary($bug);
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
         $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
@@ -126,7 +126,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
-        $summary = $this->clean_summary($bug);
+        $summary = $this->format_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
@@ -141,15 +141,20 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
-        $summary = $this->clean_summary($bug);
+        $summary = $this->format_summary($bug);
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
         $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
 
-    function clean_summary($bug) {
+    function format_summary($bug) {
         $summary = bug_format_id($bug->id) . ': ' . string_display_line_links($bug->summary);
         return strip_tags(html_entity_decode($summary));
+    }
+
+    function format_text($bug, $text) {
+        $t = string_display_line_links($text);
+        return strip_tags(html_entity_decode($t));
     }
 
     function get_attachment($bug) {
@@ -196,13 +201,13 @@ class SlackPlugin extends MantisPlugin {
             'fixed_in_version' => function($bug) { return $bug->fixed_in_version; },
             'target_version' => function($bug) { return $bug->target_version; },
             'build' => function($bug) { return $bug->build; },
-            'summary' => function($bug) use($self) { return $self->clean_summary($bug); },
+            'summary' => function($bug) use($self) { return $self->format_summary($bug); },
             'last_updated' => function($bug) { return date( config_get( 'short_date_format' ), $bug->last_updated ); },
             'date_submitted' => function($bug) { return date( config_get( 'short_date_format' ), $bug->date_submitted ); },
             'due_date' => function($bug) { return date( config_get( 'short_date_format' ), $bug->due_date ); },
-            'description' => function($bug) { return string_display_links( $bug->description ); },
-            'steps_to_reproduce' => function($bug) { return string_display_links( $bug->steps_to_reproduce ); },
-            'additional_information' => function($bug) { return string_display_links( $bug->additional_information ); },
+            'description' => function($bug) use($self) { return $self->format_text( $bug, $bug->description ); },
+            'steps_to_reproduce' => function($bug) use($self) { return $self->format_text( $bug, $bug->steps_to_reproduce ); },
+            'additional_information' => function($bug) use($self) { return $self->format_text( $bug, $bug->additional_information ); },
         );
         // Discover custom fields.
         $t_related_custom_field_ids = custom_field_get_linked_ids( $bug->project_id );
@@ -225,7 +230,7 @@ class SlackPlugin extends MantisPlugin {
         $channels = plugin_config_get('channels');
         return array_key_exists($project, $channels) ? $channels[$project] : plugin_config_get('default_channel');
     }
-    
+
     function get_webhook($project) {
     	$webhooks = plugin_config_get('url_webhooks');
     	return array_key_exists($project, $webhooks) ? $webhooks[$project] : plugin_config_get('url_webhook');
