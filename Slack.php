@@ -267,9 +267,11 @@ class SlackPlugin extends MantisPlugin {
         }
         $data = array('payload' => json_encode($payload));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         $result = curl_exec($ch);
         if ($result !== 'ok') {
-            trigger_error ( $result, E_USER_WARNING);
+            trigger_error(curl_errno($ch) . ': ' . curl_error($ch), E_USER_WARNING);
             plugin_error('ERROR_CURL', E_USER_ERROR);
         }
         curl_close($ch);
