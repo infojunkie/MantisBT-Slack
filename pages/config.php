@@ -1,7 +1,7 @@
 <?php
 /**
  * Slack Integration
- * Copyright (C) 2014 Karim Ratib (karim.ratib@gmail.com)
+ * Copyright (C) Karim Ratib (karim@meedan.com)
  *
  * Slack Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
@@ -18,146 +18,33 @@
  * or see http://www.gnu.org/licenses/.
  */
 
-auth_reauthenticate( );
+form_security_validate( 'plugin_Slack_config' );
 access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 
-html_page_top( plugin_lang_get( 'title' ) );
+/**
+ * Sets plugin config option if value is different from current/default
+ * @param string $p_name  option name
+ * @param string $p_value value to set
+ * @return void
+ */
+function config_set_if_needed( $p_name, $p_value ) {
+	if ( $p_value != plugin_config_get( $p_name ) ) {
+		plugin_config_set( $p_name, $p_value );
+	}
+}
 
-print_manage_menu( );
+$t_redirect_url = plugin_page( 'config_page', true );
+layout_page_header( null, $t_redirect_url );
+layout_page_begin();
 
-?>
+config_set_if_needed( 'url_webhook' , gpc_get_string( 'url_webhook' ) );
+config_set_if_needed( 'bot_name' , gpc_get_string( 'bot_name' ) );
+config_set_if_needed( 'bot_icon' , gpc_get_string( 'bot_icon' ) );
+config_set_if_needed( 'skip_bulk' , gpc_get_bool( 'skip_bulk' ) );
+config_set_if_needed( 'link_names' , gpc_get_bool( 'link_names' ) );
+config_set_if_needed( 'default_channel' , gpc_get_string( 'default_channel' ) );
 
-<br />
+form_security_purge( 'plugin_Slack_config' );
 
-<form action="<?php echo plugin_page( 'config_edit' )?>" method="post">
-<?php echo form_security_field( 'plugin_Slack_config_edit' ) ?>
-  <table align="center" class="width75" cellspacing="1">
-
-    <tr>
-      <td class="form-title" colspan="3">
-        <?php echo plugin_lang_get( 'title' ) . ' : ' . plugin_lang_get( 'config' )?>
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'url_webhook' )?>
-      </td>
-      <td  colspan="2">
-        <input size="80" type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'url_webhooks' )?>
-      </td>
-      <td  colspan="2">
-        <p>
-          Specifies the mapping between Mantis project names and Slack webhooks.
-        </p>
-        <p>
-          Option name is <strong>plugin_Slack_url_webhooks</strong> and is an array of 'Mantis project name' => 'Slack webhook'.
-          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
-          The current value of this option is:<pre><?php var_export(plugin_config_get( 'url_webhooks' ))?></pre>
-        </p>
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'bot_name' )?>
-      </td>
-      <td  colspan="2">
-        <input type="text" name="bot_name" value="<?php echo plugin_config_get( 'bot_name' )?>" />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'bot_icon' )?>
-      </td>
-      <td  colspan="2">
-        <p>
-          Can be either a URL pointing to small image or an emoji of the form :emoji:</br>
-          Defaults to the Mantis logo.
-        </p>
-        <input type="text" name="bot_icon" value="<?php echo plugin_config_get( 'bot_icon' )?>" />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'skip_bulk' )?>
-      </td>
-      <td  colspan="2">
-        <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'link_names' )?>
-      </td>
-      <td  colspan="2">
-        <input type="checkbox" name="link_names" <?php if (plugin_config_get( 'link_names' )) echo "checked"; ?> />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'default_channel' )?>
-      </td>
-      <td  colspan="2">
-        <input type="text" name="default_channel" value="<?php echo plugin_config_get( 'default_channel' )?>" />
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'channels' )?>
-      </td>
-      <td  colspan="2">
-        <p>
-          Specifies the mapping between Mantis project names and Slack #channels.
-        </p>
-        <p>
-          Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
-          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
-          The current value of this option is:<pre><?php var_export(plugin_config_get( 'channels' ))?></pre>
-        </p>
-      </td>
-    </tr>
-
-    <tr <?php echo helper_alternate_class( )?>>
-      <td class="category">
-        <?php echo plugin_lang_get( 'columns' )?>
-      </td>
-      <td  colspan="2">
-        <p>
-          Specifies the bug fields that should be attached to the Slack notifications.
-        </p>
-        <p>
-          Option name is <strong>plugin_Slack_columns</strong> and is an array of bug column names.
-          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
-          <?php
-            $t_columns = columns_get_all( $t_project_id );
-            $t_all = implode( ', ', $t_columns );
-          ?>
-          Available column names are:<div><textarea name="all_columns" readonly="readonly" cols="80" rows="5"><?php echo $t_all ?></textarea></div>
-          The current value of this option is:<pre><?php var_export(plugin_config_get( 'columns' ))?></pre>
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td class="center" colspan="3">
-        <input type="submit" class="button" value="<?php echo lang_get( 'change_configuration' )?>" />
-      </td>
-    </tr>
-
-  </table>
-</form>
-
-<?php
-html_page_bottom();
+html_operation_successful( $t_redirect_url );
+layout_page_end();

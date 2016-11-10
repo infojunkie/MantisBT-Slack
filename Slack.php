@@ -1,7 +1,7 @@
 <?php
 /**
  * Slack Integration
- * Copyright (C) 2014 Karim Ratib (karim.ratib@gmail.com)
+ * Copyright (C) Karim Ratib (karim@meedan.com)
  *
  * Slack Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
@@ -24,10 +24,10 @@ class SlackPlugin extends MantisPlugin {
     function register() {
         $this->name = plugin_lang_get( 'title' );
         $this->description = plugin_lang_get( 'description' );
-        $this->page = 'config';
+        $this->page = 'config_page';
         $this->version = '1.0';
         $this->requires = array(
-            'MantisCore' => '>= 1.2.0',
+            'MantisCore' => '2.0.0',
         );
         $this->author = 'Karim Ratib';
         $this->contact = 'karim@meedan.com';
