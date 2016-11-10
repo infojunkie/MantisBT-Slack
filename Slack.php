@@ -89,7 +89,9 @@ class SlackPlugin extends MantisPlugin {
 
     function bug_report_update($event, $bug, $bug_id) {
         $this->skip = $this->skip || gpc_get_bool('slack_skip');
-
+	if($event != 'EVENT_REPORT_BUG') {
+            $bug = bug_get($bug_id);
+        }
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = $this->format_summary($bug);
