@@ -68,8 +68,8 @@ class SlackPlugin extends MantisPlugin {
 
     function hooks() {
         return array(
-            'EVENT_REPORT_BUG' => 'bug_report_update',
-            'EVENT_UPDATE_BUG' => 'bug_report_update',
+            'EVENT_REPORT_BUG' => 'bug_report',
+            'EVENT_UPDATE_BUG' => 'bug_update',
             'EVENT_BUG_DELETED' => 'bug_deleted',
             'EVENT_BUG_ACTION' => 'bug_action',
             'EVENT_BUGNOTE_ADD' => 'bugnote_add_edit',
@@ -82,16 +82,19 @@ class SlackPlugin extends MantisPlugin {
     function bugnote_add_form($event, $bug_id) {
         if ($_SERVER['PHP_SELF'] !== '/bug_update_page.php') return;
 
-        echo '<tr><td class="center" colspan="6">';
-        echo '<input ', helper_get_tab_index(), ' name="slack_skip" type="checkbox" >' . plugin_lang_get('skip') . '</input>';
+        echo '<tr>';
+        echo '<th class="category">' . plugin_lang_get( 'skip' ) . '</th>';
+        echo '<td colspan="5">';
+        echo '<label>';
+        echo '<input ', helper_get_tab_index(), ' name="slack_skip" class="ace" type="checkbox" />';
+        echo '<span class="lbl"></span>';
+        echo '</label>';
         echo '</td></tr>';
     }
 
     function bug_report_update($event, $bug, $bug_id) {
         $this->skip = $this->skip || gpc_get_bool('slack_skip');
-	if($event != 'EVENT_REPORT_BUG') {
-            $bug = bug_get($bug_id);
-        }
+
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = $this->format_summary($bug);
@@ -100,6 +103,14 @@ class SlackPlugin extends MantisPlugin {
             $project, $reporter, $url, $summary
         );
         $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug));
+    }
+
+    function bug_report($event, $bug, $bug_id) {
+      $this->bug_report_update($event, $bug, $bug_id);
+    }
+
+    function bug_update($event, $bug_existing, $bug_updated) {
+      $this->bug_report_update($event, $bug_updated, $bug_updated->id);
     }
 
     function bug_action($event, $action, $bug_id) {
