@@ -31,7 +31,7 @@ class SlackPlugin extends MantisPlugin {
         );
         $this->author = 'Karim Ratib';
         $this->contact = 'karim@meedan.com';
-        $this->url = 'http://meedan.com';
+        $this->url = 'http://code.meedan.com';
     }
 
     function install() {

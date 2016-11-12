@@ -5,6 +5,7 @@ A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](htt
 
 
 # Setup
+* The `master` branch requires Mantis 2.0.x, while the `master-1.2.x` branch works for Mantis 1.2.x.
 * Extract this repo to your *Mantis folder/plugins/Slack*.
 * On the Slack side, add a new "Incoming Webhooks" integration and note the URL that Slack generates for you.
 * On the MantisBT side, access the plugin's configuration page and fill in your Slack webhook URL.
@@ -15,6 +16,5 @@ A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](htt
               'My First Mantis Project' => '#general',
               'My Second Mantis Project' => '#second-project'
             )
-            
-* You can specify which bug fields appear in the Slack notifications. Edit the *plugin_Slack_columns* configuration option for this purpose.  Follow the instructions on the plugin configuration page.
 
+* You can specify which bug fields appear in the Slack notifications. Edit the *plugin_Slack_columns* configuration option for this purpose.  Follow the instructions on the plugin configuration page.
