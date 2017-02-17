@@ -146,7 +146,7 @@ class SlackPlugin extends MantisPlugin {
         $reporter = '@' . user_get_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
-            $project, $reporter, $url, $summary, $note
+            $project, $reporter, $url, $summary, $this->bbcode_to_slack($note)
         );
         $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
@@ -293,5 +293,53 @@ class SlackPlugin extends MantisPlugin {
             plugin_error('ERROR_CURL', E_USER_ERROR);
         }
         curl_close($ch);
+    }
+
+    function bbcode_to_slack($bbtext){
+        $bbtags = array(
+            '[b]' => '*','[/b]' => '* ',
+            '[i]' => '_','[/i]' => '_ ',
+            '[u]' => '_','[/u]' => '_ ',
+            '[s]' => '~','[/s]' => '~ ',
+            '[sup]' => '','[/sup]' => '',
+            '[sub]' => '','[/sub]' => '',
+
+            '[list]' => '','[/list]' => "\n",
+            '[*]' => '• ',
+
+            '[hr]' => "\n———\n",
+
+            '[left]' => '','[/left]' => '',
+            '[right]' => '','[/right]' => '',
+            '[center]' => '','[/center]' => '',
+            '[justify]' => '','[/justify]' => '',
+        );
+
+        $bbtext = str_ireplace(array_keys($bbtags), array_values($bbtags), $bbtext);
+
+        $bbextended = array(
+            "/\[code(.*?)\](.*?)\[\/code\]/is" => "```$2```",
+            "/\[color(.*?)\](.*?)\[\/color\]/is" => "$2",
+            "/\[size=(.*?)\](.*?)\[\/size\]/is" => "$2",
+            "/\[highlight(.*?)\](.*?)\[\/highlight\]/is" => "$2",
+            "/\[url](.*?)\[\/url]/i" => "<$1>",
+            "/\[url=(.*?)\](.*?)\[\/url\]/i" => "<$1|$2>",
+            "/\[email=(.*?)\](.*?)\[\/email\]/i" => "<mailto:$1|$2>",
+            "/\[img\]([^[]*)\[\/img\]/i" => "<$1>",
+        );
+
+        foreach($bbextended as $match=>$replacement){
+            $bbtext = preg_replace($match, $replacement, $bbtext);
+        }
+        $bbtext = preg_replace_callback("/\[quote(=)?(.*?)\](.*?)\[\/quote\]/is",
+            function ($matches) {
+                if (!empty($matches[2]))
+                	$result = "\n> _" . $matches[2] . " wrote:_\n> \n";
+            	$lines = explode("\n", $matches[3]);
+            	foreach ($lines as $line)
+            	    $result .= "> " . $line . "\n";
+                return $result;
+            }, $bbtext);
+        return $bbtext;
     }
 }
