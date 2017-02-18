@@ -1,0 +1,29 @@
+<?php
+$s_plugin_Slack_ = '';
+$s_plugin_Slack_title = 'Slack-интеграция';
+$s_plugin_Slack_description = 'Добавить интеграцию со Slack в Mantis.';
+$s_plugin_Slack_config = 'Настройка';
+$s_plugin_Slack_channel = 'Канал Slack';
+$s_plugin_Slack_url_webhook = 'Slack Webhook URL по умолчанию';
+$s_plugin_Slack_url_webhooks = 'Доплнительные Slack Webhook URLы';
+$s_plugin_Slack_bot_name = 'Имя Slack-бота';
+$s_plugin_Slack_bot_icon = 'Иконка Slack-бота';
+$s_plugin_Slack_skip_bulk = 'Пропускать оповещения о групповых действиях';
+$s_plugin_Slack_link_names = 'Делать имена пользователей ссылками (это может привести к большому количеству оповещений Slack)';
+$s_plugin_Slack_default_channel = 'Каналы Slack по умолчанию';
+$s_plugin_Slack_channels = 'Каналы Slack';
+$s_plugin_Slack_columns = 'Колонки Slack';
+$s_plugin_Slack_bug_created = '*_%s_:* %s создал <%s|%s>.';
+$s_plugin_Slack_bug_updated = '*_%s_:* %s изменил <%s|%s>.';
+$s_plugin_Slack_bug_deleted = '*_%s_:* %s удалил %s.';
+$s_plugin_Slack_bugnote_created = "*_%s_:* %s прокомментировал <%s|%s>:\n\n%s";
+$s_plugin_Slack_bugnote_updated = "*_%s_:* %s изменил комментарий к <%s|%s>:\n\n%s";
+$s_plugin_Slack_bugnote_deleted = "*_%s_:* %s удалил комментарий к <%s|%s>.";
+$s_plugin_Slack_no_user = '(никто)';
+$s_plugin_Slack_unknown_field = '(не знаю, как выводить поле "%s")';
+$s_plugin_Slack_skip = 'Пропустить оповещение в Slack';
+$s_plugin_Slack_action_update = 'Обновить';
+
+$MANTIS_ERROR['plugin_Slack_ERROR_NO_CURL'] = 'Slack-плагин требует PHP-расширение cURL (http://php.net/curl)';
+$MANTIS_ERROR['plugin_Slack_ERROR_PHP_VERSION'] = 'Slack-плагин требует PHP 5.3.0 или больше';
+$MANTIS_ERROR['plugin_Slack_ERROR_CURL'] = 'Не прошёл запрос к Slack.  Проверьте свой webhook URL.  Также убедитесь, что настройки имени и иконки бота не содержат необычных символов.  Больше деталей может быть ниже.';

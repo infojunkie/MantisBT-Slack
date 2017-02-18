@@ -98,7 +98,7 @@ class SlackPlugin extends MantisPlugin {
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = $this->format_summary($bug);
-        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $reporter = $this->get_user_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
         );
@@ -128,7 +128,7 @@ class SlackPlugin extends MantisPlugin {
         $this->skip = $this->skip || gpc_get_bool('slack_skip') || $bug->view_state == VS_PRIVATE;
 
         $project = project_get_name($bug->project_id);
-        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $reporter = $this->get_user_name(auth_get_current_user_id());
         $summary = $this->format_summary($bug);
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
         $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
@@ -143,7 +143,7 @@ class SlackPlugin extends MantisPlugin {
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
         $summary = $this->format_summary($bug);
-        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $reporter = $this->get_user_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
             $project, $reporter, $url, $summary, $this->bbcode_to_slack($note)
@@ -160,7 +160,7 @@ class SlackPlugin extends MantisPlugin {
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = $this->format_summary($bug);
-        $reporter = '@' . user_get_name(auth_get_current_user_id());
+        $reporter = $this->get_user_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
         $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
     }
@@ -171,12 +171,12 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function format_text($bug, $text) {
-        $t = string_display_line_links($text);
+        $t = string_display_line_links($this->bbcode_to_slack($text));
         return strip_tags(html_entity_decode($t));
     }
 
     function get_attachment($bug) {
-        $attachment = array('fallback' => '');
+        $attachment = array('fallback' => '', 'mrkdwn_in' => array('pretext', 'text', 'fields'));
         $t_columns = (array)plugin_config_get('columns');
         foreach ($t_columns as $t_column) {
             $title = column_get_title( $t_column );
@@ -199,8 +199,8 @@ class SlackPlugin extends MantisPlugin {
         $values = array(
             'id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->id), $bug->id); },
             'project_id' => function($bug) { return project_get_name($bug->project_id); },
-            'reporter_id' => function($bug) { return '@' . user_get_name($bug->reporter_id); },
-            'handler_id' => function($bug) { return empty($bug->handler_id) ? plugin_lang_get('no_user') : ('@' . user_get_name($bug->handler_id)); },
+            'reporter_id' => function($bug) { return $this->get_user_name($bug->reporter_id); },
+            'handler_id' => function($bug) { return empty($bug->handler_id) ? plugin_lang_get('no_user') : $this->get_user_name($bug->handler_id); },
             'duplicate_id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->duplicate_id), $bug->duplicate_id); },
             'priority' => function($bug) { return get_enum_element( 'priority', $bug->priority ); },
             'severity' => function($bug) { return get_enum_element( 'severity', $bug->severity ); },
@@ -334,12 +334,17 @@ class SlackPlugin extends MantisPlugin {
         $bbtext = preg_replace_callback("/\[quote(=)?(.*?)\](.*?)\[\/quote\]/is",
             function ($matches) {
                 if (!empty($matches[2]))
-                	$result = "\n> _" . $matches[2] . " wrote:_\n> \n";
+                	$result = "\n> _*" . $matches[2] . "* wrote:_\n> \n";
             	$lines = explode("\n", $matches[3]);
             	foreach ($lines as $line)
             	    $result .= "> " . $line . "\n";
                 return $result;
             }, $bbtext);
         return $bbtext;
+    }
+
+    function get_user_name($user_id) {
+    	$user = user_get_row($user_id);
+		return '@' . $user['username'];
     }
 }
