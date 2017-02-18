@@ -146,9 +146,16 @@ class SlackPlugin extends MantisPlugin {
         $reporter = $this->get_user_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
-            $project, $reporter, $url, $summary, $this->bbcode_to_slack($note)
+            $project, $reporter, $url, $summary
         );
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_slack($note)));
+    }
+
+    function get_text_attachment($text) {
+        $attachment = array('mrkdwn_in' => array('pretext', 'text', 'fields'));
+        $attachment['fallback'] = text . "\n";
+        $attachment['text'] = $text;
+        return $attachment;
     }
 
     function bugnote_deleted($event, $bug_id, $bugnote_id) {
