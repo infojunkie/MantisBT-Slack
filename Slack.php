@@ -152,7 +152,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function get_text_attachment($text) {
-        $attachment = array('mrkdwn_in' => array('pretext', 'text', 'fields'));
+        $attachment = array('color' => '#3AA3E3', 'mrkdwn_in' => array('pretext', 'text', 'fields'));
         $attachment['fallback'] = text . "\n";
         $attachment['text'] = $text;
         return $attachment;
@@ -183,7 +183,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function get_attachment($bug) {
-        $attachment = array('fallback' => '', 'mrkdwn_in' => array('pretext', 'text', 'fields'));
+        $attachment = array('fallback' => '', 'color' => '#3AA3E3', 'mrkdwn_in' => array('pretext', 'text', 'fields'));
         $t_columns = (array)plugin_config_get('columns');
         foreach ($t_columns as $t_column) {
             $title = column_get_title( $t_column );
