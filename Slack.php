@@ -56,6 +56,7 @@ class SlackPlugin extends MantisPlugin {
             'link_names' => false,
             'channels' => array(),
             'default_channel' => '#general',
+            'usernames' => array(),
             'columns' => array(
                 'status',
                 'handler_id',
@@ -352,6 +353,9 @@ class SlackPlugin extends MantisPlugin {
 
     function get_user_name($user_id) {
     	$user = user_get_row($user_id);
-		return '@' . $user['username'];
+    	$username = $user['username'];
+        $usernames = plugin_config_get('usernames');
+        $username = array_key_exists($username, $usernames) ? $usernames[$username] : $username;
+		return '@' . $username;
     }
 }

@@ -158,6 +158,22 @@ print_manage_menu( 'manage_plugin_page.php' );
       </td>
     </tr>
 
+    <tr>
+      <td class="category">
+        <?php echo plugin_lang_get( 'usernames' )?>
+      </td>
+      <td  colspan="2">
+        <p>
+          Specifies the mapping between Mantis and Slack user names.
+        </p>
+        <p>
+          Option name is <strong>plugin_Slack_usernames</strong> and is an array of 'Mantis user name' => 'Slack user name'.
+          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
+          The current value of this option is:<pre><?php var_export(plugin_config_get( 'usernames' ))?></pre>
+        </p>
+      </td>
+    </tr>
+
 </table>
 </div>
 </div>

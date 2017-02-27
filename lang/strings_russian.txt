@@ -12,6 +12,7 @@ $s_plugin_Slack_skip_bulk = 'Пропускать оповещения о гру
 $s_plugin_Slack_link_names = 'Делать имена пользователей ссылками (это может привести к большому количеству оповещений Slack)';
 $s_plugin_Slack_default_channel = 'Каналы Slack по умолчанию';
 $s_plugin_Slack_channels = 'Каналы Slack';
+$s_plugin_Slack_usernames = 'Пользователи Slack';
 $s_plugin_Slack_columns = 'Колонки Slack';
 $s_plugin_Slack_bug_created = '*_%s_:* %s создал <%s|%s>.';
 $s_plugin_Slack_bug_updated = '*_%s_:* %s изменил <%s|%s>.';
