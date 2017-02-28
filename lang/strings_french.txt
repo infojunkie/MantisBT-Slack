@@ -1,0 +1,50 @@
+<?php
+/**
+ * Slack Integration
+ * Copyright (C) 2014 Karim Ratib (karim@meedan.com)
+ *
+ * Slack Integration is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * Slack Integration is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Slack Integration; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * or see http://www.gnu.org/licenses/.
+ *
+ * @author Karim Ratib
+ */
+
+$s_plugin_Slack_ = '';
+$s_plugin_Slack_title = 'Intégration de Slack';
+$s_plugin_Slack_description = 'Plugiciel d\'intégration pour envoyer les notifications de Mantis à des channels de Slack.';
+$s_plugin_Slack_config = 'Configuration';
+$s_plugin_Slack_url_webhook = 'URL de webhook Slack de défaut';
+$s_plugin_Slack_url_webhooks = 'URLs de webhook Slack additionnels';
+$s_plugin_Slack_bot_name = 'Nom du bot Slack';
+$s_plugin_Slack_bot_icon = 'Icône du bot Slack';
+$s_plugin_Slack_skip_bulk = 'Ne pas envoyer de notification pour les actions en bloc';
+$s_plugin_Slack_link_names = 'Convertir les noms d\'utilisateurs en liens Slack (peut causer des notifications excessives dans Slack)';
+$s_plugin_Slack_default_channel = 'Channel Slack de défault';
+$s_plugin_Slack_channels = 'Correspondances des channels';
+$s_plugin_Slack_usernames = 'Correspondances des noms d\'utilisateurs';
+$s_plugin_Slack_columns = 'Champs de bogues';
+$s_plugin_Slack_bug_created = '[%s] %s a crée <%s|%s>.';
+$s_plugin_Slack_bug_updated = '[%s] %s a modifié <%s|%s>.';
+$s_plugin_Slack_bug_deleted = '[%s] %s a effacé %s.';
+$s_plugin_Slack_bugnote_created = "[%s] %s a commenté sur <%s|%s> pour dire:";
+$s_plugin_Slack_bugnote_updated = "[%s] %s a modifié un commentaire sur <%s|%s> pour dire:";
+$s_plugin_Slack_bugnote_deleted = "[%s] %s a effacé un commentaire sur <%s|%s>.";
+$s_plugin_Slack_no_user = '(personne)';
+$s_plugin_Slack_unknown_field = '(incapable de visualiser le champ "%s")';
+$s_plugin_Slack_skip = 'Ne pas envoyer de notification sur Slack';
+$s_plugin_Slack_action_update = 'Envoyer';
+
+$MANTIS_ERROR['plugin_Slack_ERROR_NO_CURL'] = 'Le plugiciel Slack requiert l\'extension cURL (http://php.net/curl)';
+$MANTIS_ERROR['plugin_Slack_ERROR_PHP_VERSION'] = 'Le plugiciel Slack requiert PHP 5.3.0 ou plus';
+$MANTIS_ERROR['plugin_Slack_ERROR_CURL'] = 'La requête pour Slack n\'est pas arrivée à destination.  Vérifiez votre URL de webhook.  Vérifiez aussi que le nom et l\'icône du bot Slack ne contiennent pas de caractère anormaux.   Regardez ci-dessous pour plus d\'informations.';

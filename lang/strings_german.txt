@@ -1,7 +1,7 @@
 <?php
 /**
  * Slack Integration
- * Copyright (C) 2014 Karim Ratib (karim.ratib@gmail.com)
+ * Copyright (C) 2014 Karim Ratib (karim@meedan.com)
  *
  * Slack Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
@@ -24,7 +24,6 @@ $s_plugin_Slack_ = '';
 $s_plugin_Slack_title = 'Slack Integration';
 $s_plugin_Slack_description = 'Fügt die Integration von Slack (https://slack.com) zu Mantis hinzu.';
 $s_plugin_Slack_config = 'Konfiguration';
-$s_plugin_Slack_channel = 'Slack Channel';
 $s_plugin_Slack_url_webhook = 'Default Slack Webhook URL';
 $s_plugin_Slack_url_webhooks = 'Additional Slack Webhook URLs';
 $s_plugin_Slack_bot_name = 'Slack Bot Name';
@@ -32,12 +31,12 @@ $s_plugin_Slack_bot_icon = 'Slack Bot Icon';
 $s_plugin_Slack_default_channel = 'Standard Slack Channel';
 $s_plugin_Slack_channels = 'Slack Channels';
 $s_plugin_Slack_columns = 'Slack Spalten';
-$s_plugin_Slack_bug_created = '*_%s_:* %s erstellte <%s|%s>.';
-$s_plugin_Slack_bug_updated = '*_%s_:* %s aktualsierte <%s|%s>.';
-$s_plugin_Slack_bug_deleted = '*_%s_:* %s löschte %s.';
-$s_plugin_Slack_bugnote_created = "*_%s_:* %s kommentierte den Eintrag <%s|%s>:";
-$s_plugin_Slack_bugnote_updated = "*_%s_:* %s bearbeitete einen Kommentar im Eintrag <%s|%s>:";
-$s_plugin_Slack_bugnote_deleted = "*_%s_:* %s löschte einen Kommentar im Eintrag <%s|%s>.";
+$s_plugin_Slack_bug_created = '[%s] %s erstellte <%s|%s>.';
+$s_plugin_Slack_bug_updated = '[%s] %s aktualsierte <%s|%s>.';
+$s_plugin_Slack_bug_deleted = '[%s] %s löschte %s.';
+$s_plugin_Slack_bugnote_created = "[%s] %s kommentierte den Eintrag <%s|%s>:";
+$s_plugin_Slack_bugnote_updated = "[%s] %s bearbeitete einen Kommentar im Eintrag <%s|%s>:";
+$s_plugin_Slack_bugnote_deleted = "[%s] %s löschte einen Kommentar im Eintrag <%s|%s>.";
 $s_plugin_Slack_no_user = '(niemand)';
 $s_plugin_Slack_unknown_field = '(Es liegt keine Information vor, wie das Feld "%s" ausgegeben werden kann.)';
 

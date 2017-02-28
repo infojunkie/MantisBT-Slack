@@ -1,9 +1,28 @@
 <?php
+/**
+ * Slack Integration
+ * Copyright (C) 2014 Karim Ratib (karim@meedan.com)
+ *
+ * Slack Integration is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * Slack Integration is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Slack Integration; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * or see http://www.gnu.org/licenses/.
+ *
+ */
+
 $s_plugin_Slack_ = '';
 $s_plugin_Slack_title = 'Slack-интеграция';
 $s_plugin_Slack_description = 'Добавить интеграцию со Slack в Mantis.';
 $s_plugin_Slack_config = 'Настройка';
-$s_plugin_Slack_channel = 'Канал Slack';
 $s_plugin_Slack_url_webhook = 'Slack Webhook URL по умолчанию';
 $s_plugin_Slack_url_webhooks = 'Доплнительные Slack Webhook URLы';
 $s_plugin_Slack_bot_name = 'Имя Slack-бота';
@@ -14,12 +33,12 @@ $s_plugin_Slack_default_channel = 'Каналы Slack по умолчанию';
 $s_plugin_Slack_channels = 'Каналы Slack';
 $s_plugin_Slack_usernames = 'Пользователи Slack';
 $s_plugin_Slack_columns = 'Колонки Slack';
-$s_plugin_Slack_bug_created = '*_%s_:* %s создал <%s|%s>.';
-$s_plugin_Slack_bug_updated = '*_%s_:* %s изменил <%s|%s>.';
-$s_plugin_Slack_bug_deleted = '*_%s_:* %s удалил %s.';
-$s_plugin_Slack_bugnote_created = "*_%s_:* %s прокомментировал <%s|%s>:";
-$s_plugin_Slack_bugnote_updated = "*_%s_:* %s изменил комментарий к <%s|%s>:";
-$s_plugin_Slack_bugnote_deleted = "*_%s_:* %s удалил комментарий к <%s|%s>.";
+$s_plugin_Slack_bug_created = '[%s] %s создал <%s|%s>.';
+$s_plugin_Slack_bug_updated = '[%s] %s изменил <%s|%s>.';
+$s_plugin_Slack_bug_deleted = '[%s] %s удалил %s.';
+$s_plugin_Slack_bugnote_created = "[%s] %s прокомментировал <%s|%s>:";
+$s_plugin_Slack_bugnote_updated = "[%s] %s изменил комментарий к <%s|%s>:";
+$s_plugin_Slack_bugnote_deleted = "[%s] %s удалил комментарий к <%s|%s>.";
 $s_plugin_Slack_no_user = '(никто)';
 $s_plugin_Slack_unknown_field = '(не знаю, как выводить поле "%s")';
 $s_plugin_Slack_skip = 'Пропустить оповещение в Slack';

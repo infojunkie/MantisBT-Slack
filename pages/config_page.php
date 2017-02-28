@@ -149,7 +149,7 @@ print_manage_menu( 'manage_plugin_page.php' );
           Option name is <strong>plugin_Slack_columns</strong> and is an array of bug column names.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           <?php
-            $t_columns = columns_get_all( $t_project_id );
+            $t_columns = columns_get_all( @$t_project_id );
             $t_all = implode( ', ', $t_columns );
           ?>
           Available column names are:<div><textarea name="all_columns" readonly="readonly" cols="80" rows="5"><?php echo $t_all ?></textarea></div>
