@@ -1,7 +1,7 @@
 MantisBT-Slack
 ==============
 
-A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](https://slack.com/) channels.
+A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](https://slack.com/) and [Mattermost](https://about.mattermost.com/) channels.
 
 
 # Setup
