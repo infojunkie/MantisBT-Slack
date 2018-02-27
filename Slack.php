@@ -52,8 +52,7 @@ class SlackPlugin extends MantisPlugin {
             'url_webhook' => '',
             'bot_name' => 'mantis',
             'bot_icon' => '',
-            'allow_notification_private_bug' => false,
-            'allow_notification_private_bugnote' => false,
+            'allow_notification_private_content' => false,
             'skip_bulk' => true,
             'link_names' => false,
             'channels' => array(),
@@ -84,7 +83,7 @@ class SlackPlugin extends MantisPlugin {
     
     function notification_private_bug($bug){      
          if ($bug->view_state == VS_PRIVATE){
-            if ($bug->view_state == VS_PRIVATE && plugin_config_get('allow_notification_private_bug')) {
+            if ($bug->view_state == VS_PRIVATE && plugin_config_get('allow_notification_private_content')) {
                 return false;
             } return true;
          } return false;
@@ -92,7 +91,7 @@ class SlackPlugin extends MantisPlugin {
 
     function notification_private_bugnote($bugnote){
         if ($bugnote->view_state == VS_PRIVATE){
-            if ($bugnote->view_state == VS_PRIVATE && plugin_config_get('allow_notification_private_bugnote')) {
+            if ($bugnote->view_state == VS_PRIVATE && plugin_config_get('allow_notification_private_content')) {
                 return false;
             } return true;
          } return false;

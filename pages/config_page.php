@@ -96,19 +96,10 @@ print_manage_menu( 'manage_plugin_page.php' );
 
     <tr>
       <td class="category">
-        <?php echo plugin_lang_get( 'allow_notification_private_bug' )?>
+        <?php echo plugin_lang_get( 'allow_notification_private_content' )?>
       </td>
       <td  colspan="2">
-        <input type="checkbox" name="allow_notification_private_bug" <?php if (plugin_config_get( 'allow_notification_private_bug' )) echo "checked"; ?> />
-      </td>
-    </tr>
-
-    <tr>
-      <td class="category">
-        <?php echo plugin_lang_get( 'allow_notification_private_bugnote' )?>
-      </td>
-      <td  colspan="2">
-        <input type="checkbox" name="allow_notification_private_bugnote" <?php if (plugin_config_get( 'allow_notification_private_bugnote' )) echo "checked"; ?> />
+        <input type="checkbox" name="allow_notification_private_content" <?php if (plugin_config_get( 'allow_notification_private_content' )) echo "checked"; ?> />
       </td>
     </tr>
     
