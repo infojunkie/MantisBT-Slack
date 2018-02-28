@@ -52,6 +52,7 @@ class SlackPlugin extends MantisPlugin {
             'url_webhook' => '',
             'bot_name' => 'mantis',
             'bot_icon' => '',
+            'skip_private' => true,
             'skip_bulk' => true,
             'link_names' => false,
             'channels' => array(),
@@ -80,6 +81,13 @@ class SlackPlugin extends MantisPlugin {
         );
     }
 
+    function skip_private($bug_or_note){
+        return (
+            $bug_or_note->view_state == VS_PRIVATE &&
+            plugin_config_get('skip_private')
+        );
+    }
+
     function bugnote_add_form($event, $bug_id) {
         if ($_SERVER['PHP_SELF'] !== '/bug_update_page.php') return;
 
@@ -94,7 +102,7 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function bug_report_update($event, $bug, $bug_id) {
-        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $bug->view_state == VS_PRIVATE;
+        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $this->skip_private($bug);
 
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
@@ -126,7 +134,7 @@ class SlackPlugin extends MantisPlugin {
     function bug_deleted($event, $bug_id) {
         $bug = bug_get($bug_id);
 
-        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $bug->view_state == VS_PRIVATE;
+        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $this->skip_private($bug) ;
 
         $project = project_get_name($bug->project_id);
         $reporter = $this->get_user_name(auth_get_current_user_id());
@@ -139,7 +147,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $bugnote = bugnote_get($bugnote_id);
 
-        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $bug->view_state == VS_PRIVATE || $bugnote->view_state == VS_PRIVATE;
+        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $this->skip_private($bug) || $this->skip_private($bugnote);
 
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
@@ -163,7 +171,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
         $bugnote = bugnote_get($bugnote_id);
 
-        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $bug->view_state == VS_PRIVATE || $bugnote->view_state == VS_PRIVATE;
+        $this->skip = $this->skip || gpc_get_bool('slack_skip') || $this->skip_private($bug) || $this->skip_private($bugnote);
 
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);

@@ -105,6 +105,15 @@ print_manage_menu( 'manage_plugin_page.php' );
 
     <tr>
       <td class="category">
+        <?php echo plugin_lang_get( 'skip_private' )?>
+      </td>
+      <td  colspan="2">
+        <input type="checkbox" name="skip_private" <?php if (plugin_config_get( 'skip_private' )) echo "checked"; ?> />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="category">
         <?php echo plugin_lang_get( 'link_names' )?>
       </td>
       <td  colspan="2">
