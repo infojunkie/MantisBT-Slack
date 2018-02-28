@@ -1,7 +1,7 @@
 <?php
 /**
  * Slack Integration
- * Copyright (C) 2014 Karim Ratib (karim@meedan.com)
+ * Copyright (C) Karim Ratib (karim@meedan.com)
  *
  * Slack Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
@@ -28,6 +28,7 @@ $s_plugin_Slack_url_webhook = 'URL de webhook Slack de défaut';
 $s_plugin_Slack_url_webhooks = 'URLs de webhook Slack additionnels';
 $s_plugin_Slack_bot_name = 'Nom du bot Slack';
 $s_plugin_Slack_bot_icon = 'Icône du bot Slack';
+$s_plugin_Slack_skip_private = 'Ne pas envoyer de notification pour les bogues et notes privés';
 $s_plugin_Slack_skip_bulk = 'Ne pas envoyer de notification pour les actions en bloc';
 $s_plugin_Slack_link_names = 'Convertir les noms d\'utilisateurs en liens Slack (peut causer des notifications excessives dans Slack)';
 $s_plugin_Slack_default_channel = 'Channel Slack de défault';

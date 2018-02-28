@@ -96,19 +96,19 @@ print_manage_menu( 'manage_plugin_page.php' );
 
     <tr>
       <td class="category">
-        <?php echo plugin_lang_get( 'allow_notification_private_content' )?>
-      </td>
-      <td  colspan="2">
-        <input type="checkbox" name="allow_notification_private_content" <?php if (plugin_config_get( 'allow_notification_private_content' )) echo "checked"; ?> />
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="category">
         <?php echo plugin_lang_get( 'skip_bulk' )?>
       </td>
       <td  colspan="2">
         <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="category">
+        <?php echo plugin_lang_get( 'skip_private' )?>
+      </td>
+      <td  colspan="2">
+        <input type="checkbox" name="skip_private" <?php if (plugin_config_get( 'skip_private' )) echo "checked"; ?> />
       </td>
     </tr>
 
