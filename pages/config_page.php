@@ -53,6 +53,7 @@ print_manage_menu( 'manage_plugin_page.php' );
         </td>
         <td>
             <input size="80" type="text" name="url_webhook" value="<?php echo plugin_config_get( 'url_webhook' )?>" />
+            <input type="submit" name="url_webhook_test" value="<?php echo plugin_lang_get( 'url_webhook_test' )?>" />
         </td>
     </tr>
 

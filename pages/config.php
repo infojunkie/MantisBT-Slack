@@ -37,6 +37,16 @@ $t_redirect_url = plugin_page( 'config_page', true );
 layout_page_header( null, $t_redirect_url );
 layout_page_begin();
 
+if (gpc_get_string( 'url_webhook_test', false )) {
+
+  plugin_get()->notify(
+    plugin_lang_get('url_webhook_test_text'),
+    gpc_get_string( 'url_webhook' ),
+    gpc_get_string( 'default_channel' )
+  );
+
+}
+
 config_set_if_needed( 'url_webhook' , gpc_get_string( 'url_webhook' ) );
 config_set_if_needed( 'bot_name' , gpc_get_string( 'bot_name' ) );
 config_set_if_needed( 'bot_icon' , gpc_get_string( 'bot_icon' ) );

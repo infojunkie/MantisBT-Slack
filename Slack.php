@@ -81,7 +81,7 @@ class SlackPlugin extends MantisPlugin {
         );
     }
 
-    function skip_private($bug_or_note){
+    function skip_private($bug_or_note) {
         return (
             $bug_or_note->view_state == VS_PRIVATE &&
             plugin_config_get('skip_private')
