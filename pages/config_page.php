@@ -61,7 +61,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'url_webhooks' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <p>
           Specifies the mapping between Mantis project names and Slack webhooks.
         </p>
@@ -77,7 +77,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'bot_name' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <input type="text" name="bot_name" value="<?php echo plugin_config_get( 'bot_name' )?>" />
       </td>
     </tr>
@@ -86,7 +86,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'bot_icon' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <p>
           Can be either a URL pointing to small image or an emoji of the form :emoji:</br>
           Defaults to the Mantis logo.
@@ -97,19 +97,17 @@ print_manage_menu( 'manage_plugin_page.php' );
 
     <tr>
       <td class="category">
-        <?php echo plugin_lang_get( 'skip_bulk' )?>
+        <?php echo plugin_lang_get( 'notifications' )?>
       </td>
-      <td  colspan="2">
-        <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> />
-      </td>
-    </tr>
-
-    <tr>
-      <td class="category">
-        <?php echo plugin_lang_get( 'skip_private' )?>
-      </td>
-      <td  colspan="2">
-        <input type="checkbox" name="skip_private" <?php if (plugin_config_get( 'skip_private' )) echo "checked"; ?> />
+      <td colspan="2">
+        <input type="checkbox" name="notification_bug_report" <?php if (plugin_config_get( 'notification_bug_report' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bug_report' )?> <br>
+        <input type="checkbox" name="notification_bug_update" <?php if (plugin_config_get( 'notification_bug_update' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bug_update' )?> <br>
+        <input type="checkbox" name="notification_bug_deleted" <?php if (plugin_config_get( 'notification_bug_deleted' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bug_deleted' )?> <br>
+        <input type="checkbox" name="notification_bugnote_add" <?php if (plugin_config_get( 'notification_bugnote_add' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bugnote_add' )?> <br>
+        <input type="checkbox" name="notification_bugnote_edit" <?php if (plugin_config_get( 'notification_bugnote_edit' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bugnote_edit' )?> <br>
+        <input type="checkbox" name="notification_bugnote_deleted" <?php if (plugin_config_get( 'notification_bugnote_deleted' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bugnote_deleted' )?> <br>
+        <input type="checkbox" name="skip_private" <?php if (plugin_config_get( 'skip_private' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'skip_private' )?> <br>
+        <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'skip_bulk' )?>
       </td>
     </tr>
 
@@ -117,7 +115,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'link_names' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <input type="checkbox" name="link_names" <?php if (plugin_config_get( 'link_names' )) echo "checked"; ?> />
       </td>
     </tr>
@@ -126,7 +124,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'default_channel' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <input type="text" name="default_channel" value="<?php echo plugin_config_get( 'default_channel' )?>" />
       </td>
     </tr>
@@ -135,7 +133,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'channels' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <p>
           Specifies the mapping between Mantis project names and Slack #channels.
         </p>
@@ -151,7 +149,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'columns' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <p>
           Specifies the bug fields that should be attached to the Slack notifications.
         </p>
@@ -172,7 +170,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       <td class="category">
         <?php echo plugin_lang_get( 'usernames' )?>
       </td>
-      <td  colspan="2">
+      <td colspan="2">
         <p>
           Specifies the mapping between Mantis and Slack user names.
         </p>

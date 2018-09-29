@@ -54,6 +54,12 @@ config_set_if_needed( 'skip_private' , gpc_get_bool( 'skip_private' ) );
 config_set_if_needed( 'skip_bulk' , gpc_get_bool( 'skip_bulk' ) );
 config_set_if_needed( 'link_names' , gpc_get_bool( 'link_names' ) );
 config_set_if_needed( 'default_channel' , gpc_get_string( 'default_channel' ) );
+config_set_if_needed( 'notification_bug_report' , gpc_get_bool( 'notification_bug_report' ) );
+config_set_if_needed( 'notification_bug_update' , gpc_get_bool( 'notification_bug_update' ) );
+config_set_if_needed( 'notification_bug_deleted' , gpc_get_bool( 'notification_bug_deleted' ) );
+config_set_if_needed( 'notification_bugnote_add' , gpc_get_bool( 'notification_bugnote_add' ) );
+config_set_if_needed( 'notification_bugnote_edit' , gpc_get_bool( 'notification_bugnote_edit' ) );
+config_set_if_needed( 'notification_bugnote_deleted' , gpc_get_bool( 'notification_bugnote_deleted' ) );
 
 form_security_purge( 'plugin_Slack_config' );
 
