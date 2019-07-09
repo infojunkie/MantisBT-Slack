@@ -1,11 +1,11 @@
 # Changes
 
 MantisBT-Slack forked from https://github.com/infojunkie/MantisBT-Slack
-I added the possibility to send bug notification according to their severity.
+I added the possibility to map bug severity with slack channels.
 
 Setup:
 Activate "Use severity" in the plugin configuration pages.
-Then you need to map your MantisBT projects to Slack channels by setting the *plugin_Slack_severity_channels* option in Mantis
+Then you need to map your bug severity to Slack channels by setting the *plugin_Slack_severity_channels* option in Mantis
 Example value for this setting in configuration report:
             All users, All projects, complex
             array (
