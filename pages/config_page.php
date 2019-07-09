@@ -107,7 +107,7 @@ print_manage_menu( 'manage_plugin_page.php' );
         <input type="checkbox" name="notification_bugnote_edit" <?php if (plugin_config_get( 'notification_bugnote_edit' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bugnote_edit' )?> <br>
         <input type="checkbox" name="notification_bugnote_deleted" <?php if (plugin_config_get( 'notification_bugnote_deleted' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'notification_bugnote_deleted' )?> <br>
         <input type="checkbox" name="skip_private" <?php if (plugin_config_get( 'skip_private' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'skip_private' )?> <br>
-        <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'skip_bulk' )?>
+        <input type="checkbox" name="skip_bulk" <?php if (plugin_config_get( 'skip_bulk' )) echo "checked"; ?> /> <?php echo plugin_lang_get( 'skip_bulk' )?> 
       </td>
     </tr>
 
@@ -119,7 +119,7 @@ print_manage_menu( 'manage_plugin_page.php' );
         <input type="checkbox" name="link_names" <?php if (plugin_config_get( 'link_names' )) echo "checked"; ?> />
       </td>
     </tr>
-
+    
     <tr>
       <td class="category">
         <?php echo plugin_lang_get( 'default_channel' )?>
@@ -141,6 +141,38 @@ print_manage_menu( 'manage_plugin_page.php' );
           Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           The current value of this option is:<pre><?php var_export(plugin_config_get( 'channels' ))?></pre>
+        </p>
+      </td>
+    </tr>
+  
+    <tr>
+      <td class="category">
+        <?php echo "Use severity"?>
+      </td>
+      <td colspan="2">
+        <p>
+          Use the bug severity to choose in which channel the bug notification should be send 
+          (if there is no channel for this severity then the notification is not send) <br>
+          to configure it see "Slack severity Channels"
+        </p>
+        <input type="checkbox" name="use_severity" <?php if (plugin_config_get( 'use_severity' )) echo "checked"; ?> /> 
+      </td>
+    </tr> 
+
+    <tr>
+      <td class="category">
+        <?php echo 'Slack severity Channels'?>
+      </td>
+      <td colspan="2">
+        <p>
+          Specifies the mapping between the bug severity and Slack #channels. (require "Use severity")
+        </p>
+        <p>
+          Option name is <strong>plugin_Slack_severity_channels</strong> and is an array of severity (integer value) => 'Slack channel name'.
+          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.<br>
+          possible fields for severity:<pre><?php var_export(config_get( 'severity_enum_string' ))?></pre> <br>
+
+          The current value of this option is:<pre><?php var_export(plugin_config_get( 'severity_channels' ))?></pre>
         </p>
       </td>
     </tr>

@@ -45,7 +45,7 @@ class SlackPlugin extends MantisPlugin {
         }
         return true;
     }
-
+    # Severity_channels and use_severity are added to handle the sending of notification according to the severity of the bug
     function config() {
         return array(
             'url_webhooks' => array(),
@@ -56,6 +56,8 @@ class SlackPlugin extends MantisPlugin {
             'skip_bulk' => true,
             'link_names' => false,
             'channels' => array(),
+            'severity_channels' => array(),
+            'use_severity' => true,
             'default_channel' => '#general',
             'usernames' => array(),
             'columns' => array(
@@ -133,7 +135,14 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
         );
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug));
+        # check if the plugin should notify according to the severity or according to the project of the bug
+        $severity=  $bug->severity ; 
+        if (plugin_config_get("use_severity")){
+            $this->notify($msg, $this->get_webhook($severity), $this->get_channel_severity($severity), $this->get_attachment($bug));
+        }else{
+            $this->notify($msg, $this->get_webhook($severity), $this->get_channel($project), $this->get_attachment($bug));
+
+        }
     }
 
     function bug_report($event, $bug, $bug_id) {
@@ -167,7 +176,14 @@ class SlackPlugin extends MantisPlugin {
         $reporter = $this->get_user_name(auth_get_current_user_id());
         $summary = $this->format_summary($bug);
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
+        # check if the plugin should notify according to the severity or according to the project of the bug
+        $severity=  $bug->severity;
+        if (plugin_config_get(use_severity)){
+            $this->notify($msg, $this->get_webhook($severity), $this->get_channel_severity($severity));
+        }else{
+            $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
+
+        }
     }
 
     function bugnote_add_edit($event, $bug_id, $bugnote_id) {
@@ -188,7 +204,14 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
             $project, $reporter, $url, $summary
         );
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_slack($note)));
+        # check if the plugin should notify according to the severity or according to the project of the bug
+        $severity=  $bug->severity ;
+                if (plugin_config_get(use_severity)){
+            $this->notify($msg, $this->get_webhook($severity), $this->get_channel_severity($severity), $this->get_text_attachment($this->bbcode_to_slack($note)));
+        }else{
+            $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_slack($note)));
+
+        }
     }
 
     function get_text_attachment($text) {
@@ -213,7 +236,16 @@ class SlackPlugin extends MantisPlugin {
         $summary = $this->format_summary($bug);
         $reporter = $this->get_user_name(auth_get_current_user_id());
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
+
+        # check if the plugin should notify according to the severity or according to the project of the bug
+        $severity= $bug->severity;
+                if (plugin_config_get(use_severity)){
+            $this->notify($msg, $this->get_webhook($severity), $this->get_channel_severity($severity));
+        }else{
+            $this->notify($msg, $this->get_webhook($project), $this->get_channel($project));
+
+        }
+        
     }
 
     function format_summary($bug) {
@@ -300,10 +332,17 @@ class SlackPlugin extends MantisPlugin {
         return array_key_exists($project, $channels) ? $channels[$project] : plugin_config_get('default_channel');
     }
 
+    function get_channel_severity($severity) {
+        $channels = plugin_config_get('severity_channels');
+        // if there is no channel set for this severity then don't notify
+        return array_key_exists($severity, $channels) ? $channels[$severity] : "";
+    }
+
     function get_webhook($project) {
     	$webhooks = plugin_config_get('url_webhooks');
     	return array_key_exists($project, $webhooks) ? $webhooks[$project] : plugin_config_get('url_webhook');
     }
+    
 
     function notify($msg, $webhook, $channel, $attachment = FALSE) {
         if ($this->skip) return;

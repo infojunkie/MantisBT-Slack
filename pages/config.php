@@ -60,6 +60,8 @@ config_set_if_needed( 'notification_bug_deleted' , gpc_get_bool( 'notification_b
 config_set_if_needed( 'notification_bugnote_add' , gpc_get_bool( 'notification_bugnote_add' ) );
 config_set_if_needed( 'notification_bugnote_edit' , gpc_get_bool( 'notification_bugnote_edit' ) );
 config_set_if_needed( 'notification_bugnote_deleted' , gpc_get_bool( 'notification_bugnote_deleted' ) );
+config_set_if_needed( 'use_severity' , gpc_get_bool( 'use_severity' ) );
+
 
 form_security_purge( 'plugin_Slack_config' );
 
