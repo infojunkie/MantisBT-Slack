@@ -151,7 +151,7 @@ print_manage_menu( 'manage_plugin_page.php' );
       </td>
       <td colspan="2">
         <p>
-          Use the bug severity to choose in which channel the bug notification should be send 
+          Map  a bug severity with a Slack channel 
           (if there is no channel for this severity then the notification is not send) <br>
           to configure it see "Slack severity Channels"
         </p>
@@ -173,6 +173,36 @@ print_manage_menu( 'manage_plugin_page.php' );
           possible fields for severity:<pre><?php var_export(config_get( 'severity_enum_string' ))?></pre> <br>
 
           The current value of this option is:<pre><?php var_export(plugin_config_get( 'severity_channels' ))?></pre>
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="category">
+        <?php echo "Use handler"?>
+      </td>
+      <td colspan="2">
+        <p>
+          Map a bug handler with a Slack channel 
+          (has priority) <br>
+          to configure it see "Slack handler Channels"
+        </p>
+        <input type="checkbox" name="use_handler" <?php if (plugin_config_get( 'use_handler' )) echo "checked"; ?> /> 
+      </td>
+    </tr> 
+
+    <tr>
+      <td class="category">
+        <?php echo 'Slack handler Channels'?>
+      </td>
+      <td colspan="2">
+        <p>
+          Specifies the mapping between the bug handler and Slack #channels. (require "Use severity")
+        </p>
+        <p>
+          Option name is <strong>plugin_Slack_severity_channels</strong> and is an array of 'handler username' => 'Slack channel name'.
+          Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
+          The current value of this option is:<pre><?php var_export(plugin_config_get( 'handler_channels' ))?></pre>
         </p>
       </td>
     </tr>
