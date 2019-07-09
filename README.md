@@ -10,7 +10,7 @@ Example value for this setting in configuration report:
                 10 => '#integration',
                 70 => '#installation'
             )
-==============
+
 A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](https://slack.com/) and [Mattermost](https://about.mattermost.com/) channels.
 
 
