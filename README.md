@@ -1,16 +1,24 @@
 # Changes
 
 MantisBT-Slack forked from https://github.com/infojunkie/MantisBT-Slack
-I added the possibility to map bug severity with slack channels.
+I added the possibility to map bug severity/bug handler with slack channels.
 
 Setup:
 Activate "Use severity" in the plugin configuration pages.
-Then you need to map your bug severity to Slack channels by setting the *plugin_Slack_severity_channels* option in Mantis
+Then you need to map your bug severities to Slack channels by setting the *plugin_Slack_severity_channels* option in the configuration report screen from MantisBT.
 Example value for this setting in configuration report:
             All users, All projects, complex
             array (
                 10 => '#integration',
                 70 => '#installation'
+            )
+            
+Activate "Use handler" in the plugin configuration pages.
+Then you need to map your bug handlers to Slack channels by setting the *plugin_Slack_handler_channels* option in the configuration report screen from MantisBT.
+Example value for this setting in configuration report:
+            All users, All projects, complex
+            array (
+                 'support' => '#support',
             )
 
 A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](https://slack.com/) and [Mattermost](https://about.mattermost.com/) channels.
