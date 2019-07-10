@@ -7,6 +7,7 @@ Setup:
 Activate "Use severity" in the plugin configuration pages.
 Then you need to map your bug severities to Slack channels by setting the *plugin_Slack_severity_channels* option in the configuration report screen from MantisBT.
 Example value for this setting in configuration report:
+            
             All users, All projects, complex
             array (
                 10 => '#integration',
@@ -16,6 +17,7 @@ Example value for this setting in configuration report:
 Activate "Use handler" in the plugin configuration pages.
 Then you need to map your bug handlers to Slack channels by setting the *plugin_Slack_handler_channels* option in the configuration report screen from MantisBT.
 Example value for this setting in configuration report:
+
             All users, All projects, complex
             array (
                  'support' => '#support',
