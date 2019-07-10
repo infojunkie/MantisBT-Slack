@@ -126,6 +126,20 @@ class SlackPlugin extends MantisPlugin {
         echo '</td></tr>';
     }
 
+    function get_color($status){
+        // split the status_enum string which is a string like 10:new,20:open, ...
+        $status_array = explode (",", config_get('status_enum_string'));
+        foreach ($status_array as $elem){
+            $elem = explode (":",$elem);
+            // if $status  match the  status number from my config I search the color that match the name of the status 
+            if ($elem[0] == $status){
+                return config_get('status_colors')[$elem[1]];
+
+            } 
+        }
+        return '#3AA3E3';
+    }
+
     function bug_report_update($event, $bug, $bug_id) {
         $this->skip = $this->skip ||
             gpc_get_bool('slack_skip') ||
@@ -139,9 +153,11 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $reporter, $url, $summary
         );
-        $severity=  $bug->severity ; 
+        $status = $bug->status;
+        $severity=  $bug->severity ;
+        $color = $this->get_color($status); 
         $handler=user_get_username($bug->handler_id);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project,$handler,$severity), $this->get_attachment($bug));
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project,$handler,$severity), $this->get_attachment($bug, $color));
     }
 
     function bug_report($event, $bug, $bug_id) {
@@ -199,14 +215,15 @@ class SlackPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
             $project, $reporter, $url, $summary
         );
-
+        $status = $bug ->status;
         $severity=  $bug->severity ; 
         $handler=user_get_username($bug->handler_id);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project,$handler,$severity), $this->get_text_attachment($this->bbcode_to_slack($note)));
+        $color = $this->get_color($status);
+        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project,$handler,$severity), $this->get_text_attachment($this->bbcode_to_slack($note),$color));
     }
 
-    function get_text_attachment($text) {
-        $attachment = array('color' => '#3AA3E3', 'mrkdwn_in' => array('pretext', 'text', 'fields'));
+    function get_text_attachment($text, $color) {
+        $attachment = array('color' => $color, 'mrkdwn_in' => array('pretext', 'text', 'fields'));
         $attachment['fallback'] = text . "\n";
         $attachment['text'] = $text;
         return $attachment;
@@ -243,8 +260,8 @@ class SlackPlugin extends MantisPlugin {
         return strip_tags(html_entity_decode($t));
     }
 
-    function get_attachment($bug) {
-        $attachment = array('fallback' => '', 'color' => '#3AA3E3', 'mrkdwn_in' => array('pretext', 'text', 'fields'));
+    function get_attachment($bug, $color) {
+        $attachment = array('fallback' => '', 'color' => $color, 'mrkdwn_in' => array('pretext', 'text', 'fields'));
         $t_columns = (array)plugin_config_get('columns');
         foreach ($t_columns as $t_column) {
             $title = column_get_title( $t_column );
