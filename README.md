@@ -1,7 +1,9 @@
 # Changes
 
 MantisBT-Slack forked from https://github.com/infojunkie/MantisBT-Slack
-I added the possibility to map bug severity/bug handler with slack channels.
+I added the possibility to map bug severity/bug handler with slack channels.  
+I matched the color displayed in slack with the bug status color.
+
 
 Setup:
 Activate "Use severity" in the plugin configuration pages.
