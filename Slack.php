@@ -217,13 +217,15 @@ class SlackPlugin extends MantisPlugin {
     }
 
     function format_summary($bug) {
-        $summary = bug_format_id($bug->id) . ': ' . string_display_line_links($bug->summary);
-        return strip_tags(html_entity_decode($summary));
+        return bug_format_id($bug->id) . ': ' . $this->format_text($bug->summary);
     }
 
-    function format_text($bug, $text) {
-        $t = string_display_line_links($this->bbcode_to_slack($text));
-        return strip_tags(html_entity_decode($t));
+    function format_text($text) {
+        return strip_tags(
+            string_display_line_links(
+                $this->bbcode_to_slack($text)
+            )
+        );
     }
 
     function get_attachment($bug) {
@@ -274,9 +276,9 @@ class SlackPlugin extends MantisPlugin {
             'last_updated' => function($bug) { return date( config_get( 'short_date_format' ), $bug->last_updated ); },
             'date_submitted' => function($bug) { return date( config_get( 'short_date_format' ), $bug->date_submitted ); },
             'due_date' => function($bug) { return date( config_get( 'short_date_format' ), $bug->due_date ); },
-            'description' => function($bug) use($self) { return $self->format_text( $bug, $bug->description ); },
-            'steps_to_reproduce' => function($bug) use($self) { return $self->format_text( $bug, $bug->steps_to_reproduce ); },
-            'additional_information' => function($bug) use($self) { return $self->format_text( $bug, $bug->additional_information ); },
+            'description' => function($bug) use($self) { return $self->format_text( $bug->description ); },
+            'steps_to_reproduce' => function($bug) use($self) { return $self->format_text( $bug->steps_to_reproduce ); },
+            'additional_information' => function($bug) use($self) { return $self->format_text( $bug->additional_information ); },
         );
         // Discover custom fields.
         $t_related_custom_field_ids = custom_field_get_linked_ids( $bug->project_id );
