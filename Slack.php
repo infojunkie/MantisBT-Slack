@@ -222,7 +222,9 @@ class SlackPlugin extends MantisPlugin {
 
     function format_text($text) {
         return strip_tags(
-            string_display_line_links(
+            str_replace(
+                array('&', '<', '>'),
+                array('&amp;', '&lt;', '&gt;'),
                 $this->bbcode_to_slack($text)
             )
         );
