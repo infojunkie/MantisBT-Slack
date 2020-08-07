@@ -242,11 +242,21 @@ class SlackPlugin extends MantisPlugin {
                 $attachment['fields'][] = array(
                     'title' => $title,
                     'value' => $value,
-                    'short' => !column_is_extended( $t_column ),
+                    'short' => $this->is_field_short($t_column),
                 );
             }
         }
         return $attachment;
+    }
+
+    function is_field_short($column) {
+        $id = custom_field_get_id_from_name(str_replace('custom_', '', $column));
+        if ($id) {
+            $field = custom_field_get_definition($id);
+            return $field['type'] != CUSTOM_FIELD_TYPE_TEXTAREA;
+        }
+
+        return !column_is_extended($column);
     }
 
     function format_value($bug, $field_name) {
