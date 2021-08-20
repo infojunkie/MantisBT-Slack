@@ -1,0 +1,23 @@
+version: "3.8"
+volumes:
+  mysql:
+services:
+  mantisbt:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./config/config_inc.php:/var/www/html/config/config_inc.php
+      - .:/var/www/html/plugins/Slack
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./config/mysql:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bugtracker
+      - MYSQL_USER=mantis
+      - MYSQL_PASSWORD=mantis
