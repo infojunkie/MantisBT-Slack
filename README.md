@@ -1,7 +1,7 @@
 MantisBT-Slack
 ==============
 
-A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](https://slack.com/) and [Mattermost](https://about.mattermost.com/) channels.
+A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](https://slack.com/), [Mattermost](https://about.mattermost.com/) and [Discord](https://discord.com/) channels.
 
 # Setup
 * The `master` branch requires Mantis 2.x, while the `master-1.2.x` branch works for Mantis 1.2.x.
@@ -16,7 +16,10 @@ A [MantisBT](http://www.mantisbt.org/) plugin to send bug updates to [Slack](htt
               'My Second Mantis Project' => '#second-project'
             )
 
-* You can specify which bug fields appear in the Slack notifications. Edit the *plugin_Slack_columns* configuration option for this purpose.  Follow the instructions on the plugin configuration page.
+* You can specify which bug fields appear in the Slack notifications. Edit the *plugin_Slack_columns* configuration option for this purpose.  Follow the
+instructions on the plugin configuration page.
+
+* For Discord, you need to append `/slack` so that Discord handles this as a Slack-compatible webhook. [More info here](https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook).
 
 # Development
 You can run a local development environment using Docker Compose:
